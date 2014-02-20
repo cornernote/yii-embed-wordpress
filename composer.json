@@ -1,6 +1,6 @@
 {
     "name": "cornernote/yii-embed-wordpress",
-    "description": "Yii application embedded into WordPress.",
+    "description": "Yii embedded into WordPress.",
     "type": "wordpress-plugin",
     "license": "BSD-3-Clause",
     "keywords": ["yii", "wordpress", "embed", "mrphp"],
