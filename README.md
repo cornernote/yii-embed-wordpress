@@ -1,4 +1,3 @@
-yii-embed-wordpress
-===================
+# Yii Embed for WordPress
 
-Yii application embedded into WordPress
+Yii embedded into WordPress
