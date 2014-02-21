@@ -3,7 +3,7 @@
  * Plugin Name: Yii Embed
  * Plugin URI: https://github.com/cornernote/yii-embed-wordpress/
  * Description: Yii embedded into WordPress.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Mr PHP
  * Author URI: http://mrphp.com.au
  * License: BSD-3-Clause
@@ -56,7 +56,7 @@ define('YII_EMBED_URL', plugin_dir_url(__FILE__));
 define('YII_EMBED_PATH', __DIR__ . '/');
 
 // load YiiEmbed and Yii
-require_once(YII_EMBED_PATH . 'components/YiiEmbed.php');
+require_once(YII_EMBED_PATH . 'wordpress/YiiEmbed.php');
 define('YII_EMBED_YII_VERSION', YiiEmbed::yiiVersion());
 
 // add default options
@@ -69,21 +69,6 @@ load_plugin_textdomain('yii-embed', false, basename(YII_EMBED_PATH) . '/language
 
 // setup admin pages
 if (is_admin()) {
-
-    // add action for notices
-    add_action('yii_embed_admin_notice', 'YiiEmbed::admin_notice', 10, 2);
-
-    // message if yii is not found
-    if (!YII_EMBED_YII_VERSION) {
-        $message = strtr(__('<p><b>Could not find Yii Framework.</b><br/>Visit <a href=":settings_href"><strong>Settings &gt; Yii Embed</strong></a> to configure the path or download the framework using one of the following methods:</p><p class="submit">:automatic_download :manual_download</p>'), array(
-            ':settings_href' => get_admin_url() . 'admin.php?page=yii-embed-settings',
-            ':automatic_download' => '<a href="' . YII_EMBED_URL . '/yii/download.php" class="button-primary" onclick="return confirm(\'Do you want to download and install Yii Framework to:\n' . YiiEmbed::yiiPath() . '\n\nIf you proceed please allow upto 10 minutes for the request to complete.\')">' . __('Automatic Download') . '</a>',
-            ':manual_download' => '<a href="' . YiiEmbed::yiiDownloadUrl() . '" onclick="return confirm(\'After downloading, please unzip the Yii &quot;framework/&quot; folder into:\n' . YiiEmbed::yiiPath() . '\');" class="button">' . __('Manual Download') . '</a>',
-        ));
-        do_action('yii_embed_admin_notice', $message, 'error');
-    }
-
-    // register settings page
-    require_once(YII_EMBED_PATH . 'components/YiiEmbedSettings.php');
-    new YiiEmbedSettings();
+    require_once(YII_EMBED_PATH . 'wordpress/YiiEmbedAdmin.php');
+    YiiEmbedAdmin::init();
 }

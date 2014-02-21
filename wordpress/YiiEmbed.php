@@ -45,18 +45,17 @@ class YiiEmbed
 {
 
     /**
-     * Callback for yii_embed_admin_notice
+     * YiiEmbedApplication
      *
-     * Example:
-     * do_action('yii_embed_admin_notice', __('<p>Hello world!</p>'));
-     * do_action('yii_embed_admin_notice', __('<p>An error occurred.</p>'), 'error');
-     *
-     * @param string $message HTML message to display on the admin page.
-     * @param string $class CSS class to wrap the message in, either "updated" or "error".
+     * @return YiiEmbedApplication
      */
-    public static function admin_notice($message, $class = 'updated')
+    public static function app()
     {
-        add_action('admin_notices', create_function('', 'echo \'<div class="' . addslashes($class) . '">' . str_replace("'", "\\'", $message) . '</div>\';'));
+        static $app;
+        if ($app !== null)
+            return $app;
+
+        return $app = Yii::createApplication('YiiEmbedApplication', YII_EMBED_PATH . 'config/main.php');
     }
 
     /**
@@ -76,7 +75,7 @@ class YiiEmbed
             return $yiiVersion = false;
 
         require_once($yii_file);
-        Yii::setPathOfAlias('yii-embed', __DIR__);
+        Yii::setPathOfAlias('yii-embed', dirname(__DIR__));
         Yii::import('yii-embed.components.*');
         Yii::$enableIncludePath = false;
         return $yiiVersion = Yii::getVersion();

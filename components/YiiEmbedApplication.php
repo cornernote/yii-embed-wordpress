@@ -34,42 +34,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * YiiEmbedApplication
+ *
+ * The Yii Application for WordPress
+ *
+ * @package yii-embed-wordpress
+ */
+class YiiEmbedApplication extends CWebApplication
+{
 
-/** no theme */
-define('WP_USE_THEMES', false);
+    /**
+     * Constructor
+     *
+     * Unset Yii::app() to allow multiple applications to exist in the WordPress environment.
+     *
+     * @param mixed $config application configuration.
+     */
+    public function __construct($config=null)
+    {
+        parent::__construct($config);
 
-// load wp-load
-$path = realpath(__DIR__ . '/../../../../');
-while ($path) {
-    if (file_exists($path . '/wp-load.php')) {
-        require_once($path . '/wp-load.php');
-        break;
+        // unset Yii::app()
+        Yii::setApplication(null);
     }
-    if ($path == dirname($path))
-        break;
-    $path = dirname($path);
+
 }
-
-// load wordpress
-if (!function_exists('wp')) {
-    throw new Exception('Could not load wordpress.');
-}
-
-// check access
-if (!current_user_can('manage_options')) {
-    throw new Exception(__('You do not have sufficient permissions to access this page.'));
-}
-
-// increase execution time
-set_time_limit(60 * 10);
-
-// disable gzip to ensure buffers can be flushed
-@apache_setenv('no-gzip', 1);
-@ini_set('zlib.output_compression', 0);
-
-// load classes
-require_once(dirname(__DIR__) . '/wordpress/YiiEmbed.php');
-require_once(dirname(__DIR__) . '/wordpress/YiiEmbedDownload.php');
-
-// do the download
-YiiEmbedDownload::init()->download();
