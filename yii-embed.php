@@ -51,7 +51,7 @@ if (!function_exists('wp')) {
 }
 
 // define constants
-define('YII_EMBED_VERSION', '1.0.0');
+define('YII_EMBED_VERSION', '1.1.0');
 define('YII_EMBED_URL', plugin_dir_url(__FILE__));
 define('YII_EMBED_PATH', __DIR__ . '/');
 
