@@ -76,7 +76,7 @@ class YiiEmbedSettings
     public function admin_init()
     {
         // show version if yii was loaded
-        if (YiiEmbed::yiiVersion()) {
+        if (!empty($_GET['page']) && $_GET['page'] == 'yii-embed-settings' && YiiEmbed::yiiVersion()) {
             do_action('yii_embed_admin_notice', strtr(__('<p>Detected Yii Framework :version, Yii-Haw!</p>'), array(':version' => YiiEmbed::yiiVersion())));
         }
 

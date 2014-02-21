@@ -68,15 +68,17 @@ class YiiEmbed
     public static function yiiVersion($refresh = false)
     {
         static $yiiVersion;
-        if ($yiiVersion && !$refresh)
+        if ($yiiVersion !== null && !$refresh)
             return $yiiVersion;
 
-        $yii_file = self::yiiPath() . '/framework/yii.php';
+        $yii_file = self::yiiPath($refresh) . '/framework/yii.php';
         if (!file_exists($yii_file))
-            return false;
+            return $yiiVersion = false;
 
         require_once($yii_file);
-        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        Yii::setPathOfAlias('yii-embed', __DIR__);
+        Yii::import('yii-embed.components.*');
+        Yii::$enableIncludePath = false;
         return $yiiVersion = Yii::getVersion();
     }
 
@@ -89,7 +91,7 @@ class YiiEmbed
     public static function yiiPath($refresh = false)
     {
         static $yiiPath;
-        if ($yiiPath && !$refresh)
+        if ($yiiPath !== null && !$refresh)
             return $yiiPath;
 
         $yiiEmbed = get_option('yii_embed');

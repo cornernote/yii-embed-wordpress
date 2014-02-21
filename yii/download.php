@@ -72,14 +72,4 @@ require_once(dirname(__DIR__) . '/components/YiiEmbed.php');
 require_once(dirname(__DIR__) . '/components/YiiEmbedDownload.php');
 
 // do the download
-if (!empty($_GET['force']) || !YiiEmbed::yiiVersion()) {
-    YiiEmbedDownload::init()->download();
-}
-// already downloaded
-else {
-    echo 'Yii Framework ' . YiiEmbed::yiiVersion() . ' already downloaded.<br/>';
-    echo '<a href="download.php?force=true">' . __('Force Download') . '</a> | ';
-}
-
-// link back to admin
-echo '<a href="' . get_admin_url() . 'options-general.php?page=yii-embed-settings">' . __('Return to WordPress') . '</a>';
+YiiEmbedDownload::init()->download();

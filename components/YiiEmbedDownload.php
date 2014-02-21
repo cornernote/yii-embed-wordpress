@@ -59,39 +59,62 @@ class YiiEmbedDownload
      */
     public function download()
     {
-        // setup variables
-        $yiiPath = YiiEmbed::yiiPath();
-        $yiiDownloadUrl = YiiEmbed::yiiDownloadUrl();
-        $pathinfo = pathinfo($yiiDownloadUrl);
-        $yiiFrameworkPath = $yiiPath . '/framework/';
-        $yiiFrameworkUnzipPath = $yiiPath . '/' . $pathinfo['filename'];
-        $yiiZipFile = $yiiPath . '/' . $pathinfo['basename'];
-        $yiiZipPath = $pathinfo['filename'] . '/framework/';
+        // header
+        $this->output('<style>body{ font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }</style>');
+        $this->output('<h1>' . __('Yii Embed - Yii Framework Downloader') . '</h1>');
 
-        // pre cleanup
-        $this->delete($yiiFrameworkPath);
-        $this->delete($yiiFrameworkUnzipPath);
-        $this->delete($yiiZipFile);
+        // do the download
+        if (!empty($_GET['force']) || !YiiEmbed::yiiVersion()) {
 
-        // download
-        $this->output(__('Downloading') . ': ' . $yiiDownloadUrl, true);
-        $downloaded = $this->downloadChunked($yiiDownloadUrl, $yiiZipFile, 1024, '.');
-        if (!$downloaded) {
-            throw new Exception(__('Failed to download.'));
+            // setup variables
+            $yiiPath = YiiEmbed::yiiPath();
+            $yiiDownloadUrl = YiiEmbed::yiiDownloadUrl();
+            $pathinfo = pathinfo($yiiDownloadUrl);
+            $yiiFrameworkPath = $yiiPath . '/framework/';
+            $yiiFrameworkUnzipPath = $yiiPath . '/' . $pathinfo['filename'];
+            $yiiZipFile = $yiiPath . '/' . $pathinfo['basename'];
+            $yiiZipPath = $pathinfo['filename'] . '/framework/';
+
+            // pre cleanup
+            $this->delete($yiiFrameworkPath);
+            $this->delete($yiiFrameworkUnzipPath);
+            $this->delete($yiiZipFile);
+
+            // download
+            $this->output('<h2>' . __('Downloading') . '</h2><b>' . $yiiDownloadUrl . '</b> - ');
+            $downloaded = $this->downloadChunked($yiiDownloadUrl, $yiiZipFile);
+            if (!$downloaded) {
+                throw new Exception(__('Failed to download.'));
+            }
+
+            // unzip
+            $this->output('<h2>' . __('Unzipping') . '</h2><b>' . $yiiZipFile . '</b> - ');
+            $files = $this->unzipEntryPath($yiiZipFile, $yiiPath, $yiiZipPath);
+            if (!$files) {
+                throw new Exception(__('Failed to unzip.'));
+            }
+            $this->output(count($files) . ' ' . __('files'), true);
+
+            // post cleanup
+            rename($yiiFrameworkUnzipPath . '/framework/', $yiiFrameworkPath);
+            $this->delete($yiiFrameworkUnzipPath);
+            $this->delete($yiiZipFile);
+
+            // add security to yii folder
+            file_put_contents($yiiFrameworkPath . '.htaccess', 'deny from all');
+            file_put_contents($yiiFrameworkPath . 'index.php', '');
+
+            // output yii version
+            $this->output('<h2>' . __('Success!') . '</h2>');
+            $this->output(strtr(__('Yii Framework version :version is installed, Yii-Haw!'), array(':version' => YiiEmbed::yiiVersion(true))));
         }
-        $this->output(' ' . strtr(__('downloaded :size bytes.'), array(':size' => number_format($downloaded, 0, '', ','))), true);
-
-        // unzip
-        $this->output(__('Unzipping') . ': ' . $yiiZipFile);
-        if (!$this->unzipEntryPath($yiiZipFile, $yiiPath, $yiiZipPath, true)) {
-            throw new Exception(__('Failed to unzip.'));
+        // already downloaded
+        else {
+            $this->output('<h2>' . strtr(__('Yii Framework :version is already installed'), array(':version' => YiiEmbed::yiiVersion())) . '</h2>');
+            $this->output('<a href="download.php?force=true">' . __('Force Download') . '</a> | ');
         }
-        $this->output(strtr(__('Downloaded Yii :version, Yii-Haw!'), array(':version' => YiiEmbed::yiiVersion(true))), true);
-
-        // post cleanup
-        rename($yiiFrameworkUnzipPath . '/framework/', $yiiFrameworkPath);
-        $this->delete($yiiFrameworkUnzipPath);
-        $this->delete($yiiZipFile);
+        // link back to admin
+        $this->output('<a href="' . get_admin_url() . 'options-general.php?page=yii-embed-settings">' . __('Return to WordPress') . '</a>');
     }
 
     /**
@@ -172,10 +195,10 @@ class YiiEmbedDownload
      * @param string $inFile The full URL to the remote file.
      * @param string $outFile The path where to save the file.
      * @param int $chunkSize The size of the chunks in bytes.
-     * @param string $outputMarker A string that will be output on each chunk.
+     * @param string $outputMarker A string that will be output on each chunk, or "%" to output the percentage.
      * @return bool|int
      */
-    public function downloadChunked($inFile, $outFile, $chunkSize = 1024, $outputMarker = '')
+    public function downloadChunked($inFile, $outFile, $chunkSize = 1024000, $outputMarker = '%')
     {
         // parse_url breaks a part a URL into it's parts, i.e. host, path, query string, etc.
         $parts = parse_url($inFile);
@@ -188,7 +211,7 @@ class YiiEmbedDownload
             $parts['path'] .= '?' . $parts['query'];
         }
 
-        // Send the request to the server for the file
+        // send the request to the server for the file
         $request = "GET {$parts['path']} HTTP/1.1\r\n";
         $request .= "Host: {$parts['host']}\r\n";
         $request .= "User-Agent: Mozilla/5.0\r\n";
@@ -196,7 +219,7 @@ class YiiEmbedDownload
         $request .= "Connection: keep-alive\r\n\r\n";
         fwrite($i_handle, $request);
 
-        // Now read the headers from the remote server. We'll need to get the content length.
+        // read the headers from the remote server
         $headers = array();
         while (!feof($i_handle)) {
             $line = fgets($i_handle);
@@ -204,14 +227,14 @@ class YiiEmbedDownload
             $headers[] = $line;
         }
 
-        // Look for location header and download the new location
+        // look for Location header and download the new location
         foreach ($headers as $header) {
-            if (strpos(strtolower($header), 'location:') !== false) {
+            if (stripos($header, 'Location:') !== false) {
                 return $this->downloadChunked(trim(substr($header, 9)), $outFile, $chunkSize, $outputMarker);
             }
         }
 
-        // Look for the Content-Length header, and get the size of the remote file.
+        // look for the Content-Length header, and get the size of the remote file
         $length = 0;
         foreach ($headers as $header) {
             if (stripos($header, 'Content-Length:') === 0) {
@@ -220,7 +243,11 @@ class YiiEmbedDownload
             }
         }
 
-        // Start reading in the remote file, and writing it to the local file one chunk at a time.
+        // output the percentage placeholder
+        if ($outputMarker == '%')
+            $this->output('<span id="download-percent">0.00</span>% - <span id="download-bytes">0</span> of ' . number_format($length, 0) . ' ' . __('bytes') . '<br/>');
+
+        // start reading in the remote file, and writing it to the local file one chunk at a time
         $cnt = 0;
         while (!feof($i_handle)) {
             // Download a chunk
@@ -230,11 +257,18 @@ class YiiEmbedDownload
                 return false;
             }
             $cnt += $bytes;
-            // We're done reading when we've reached the content length
+            // reached the content length, done reading
             if ($cnt >= $length) break;
-            // Output a marker to show progress
-            $this->output($outputMarker);
+            // output a marker to show progress
+            if ($outputMarker == '%')
+                $this->output('<script>document.getElementById("download-bytes").innerHTML="' . number_format($cnt) . '";document.getElementById("download-percent").innerHTML="' . number_format($cnt / $length * 100, 2) . '";</script>');
+            elseif ($outputMarker)
+                $this->output($outputMarker);
         }
+
+        // set the final progress
+        if ($outputMarker == '%')
+            $this->output('<script>document.getElementById("download-bytes").innerHTML="' . number_format($cnt) . '";document.getElementById("download-percent").innerHTML="' . number_format($cnt / $length * 100, 2) . '";</script>');
 
         fclose($i_handle);
         fclose($o_handle);
