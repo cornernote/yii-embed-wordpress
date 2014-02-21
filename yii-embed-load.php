@@ -54,6 +54,7 @@ if (!function_exists('wp')) {
 define('YII_EMBED_VERSION', '1.0.0');
 define('YII_EMBED_URL', plugin_dir_url(__FILE__));
 define('YII_EMBED_PATH', __DIR__ . '/');
+define('YII_EMBED_YII_VERSION', YiiEmbed::yiiVersion());
 
 // load YiiEmbed
 require_once(YII_EMBED_PATH . 'components/YiiEmbed.php');
@@ -72,8 +73,8 @@ if (is_admin()) {
     // add action for notices
     add_action('yii_embed_admin_notice', 'YiiEmbed::admin_notice', 10, 2);
 
-    // verify yii path
-    if (!YiiEmbed::yiiVersion()) {
+    // message if yii is not found
+    if (!YII_EMBED_YII_VERSION) {
         $message = strtr(__('<p><b>Could not find Yii Framework.</b><br/>Visit <a href=":settings_href"><strong>Settings &gt; Yii Embed</strong></a> to configure the path or download the framework using one of the following methods:</p><p class="submit">:automatic_download :manual_download</p>'), array(
             ':settings_href' => get_admin_url() . 'admin.php?page=yii-embed-settings',
             ':automatic_download' => '<a href="' . WP_CONTENT_URL . '/plugins/yii-embed-wordpress/yii/download.php" class="button-primary" onclick="return confirm(\'Do you want to download and install Yii Framework to:\n' . YiiEmbed::yiiPath() . '\n\nIf you proceed please allow upto 10 minutes for the request to complete.\')">' . __('Automatic Download') . '</a>',
@@ -85,8 +86,4 @@ if (is_admin()) {
     // register settings page
     require_once(YII_EMBED_PATH . 'components/YiiEmbedSettings.php');
     new YiiEmbedSettings();
-
-    // register download page
-    require_once(YII_EMBED_PATH . 'components/YiiEmbedDownload.php');
-    new YiiEmbedDownload();
 }
