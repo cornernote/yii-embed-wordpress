@@ -35,14 +35,48 @@
  */
 
 /**
- * YiiEmbedApplication
+ * YiiEmbedEntry
  *
- * The Yii Application for WordPress
+ * Entry page to allow Yii controllers to be called.
  *
  * @package yii-embed-wordpress
  */
-class YiiEmbedApplication extends CWebApplication
+class YiiEmbedEntry
 {
 
+    /**
+     * Initialize the callbacks to allow Yii controllers to be called.
+     *
+     * @return YiiEmbedApplication
+     */
+    public static function init()
+    {
+        // add short tag callback
+        add_shortcode('yii_embed_yii', 'YiiEmbedEntry::yii');
+
+        // add template redirect for gii
+        if (!empty($_GET['r']) && strpos($_GET['r'], 'gii') === 0) {
+            add_filter('template_redirect', 'YiiEmbedEntry::yii_and_exit');
+        }
+    }
+
+    /**
+     *
+     */
+    public static function yii()
+    {
+        $route = !empty($_GET['r']) ? $_GET['r'] : null;
+        YiiEmbed::app()->runController($route);
+    }
+
+    /**
+     *
+     */
+    public static function yii_and_exit()
+    {
+        $route = !empty($_GET['r']) ? $_GET['r'] : null;
+        YiiEmbed::app()->runController($route);
+        exit;
+    }
 
 }

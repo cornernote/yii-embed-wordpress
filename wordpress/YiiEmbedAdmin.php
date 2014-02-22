@@ -44,6 +44,9 @@
 class YiiEmbedAdmin
 {
 
+    /**
+     * Initialize the Admin callbacks and messages
+     */
     public static function init()
     {
         // add action for notices

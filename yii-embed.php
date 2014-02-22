@@ -50,10 +50,13 @@ if (!function_exists('wp')) {
     exit;
 }
 
-// define constants
+// yii embed constants
 define('YII_EMBED_VERSION', '1.1.0');
 define('YII_EMBED_URL', plugin_dir_url(__FILE__));
 define('YII_EMBED_PATH', __DIR__ . '/');
+
+// yii constants
+defined('YII_DEBUG') or define('YII_DEBUG', WP_DEBUG);
 
 // load YiiEmbed and Yii
 require_once(YII_EMBED_PATH . 'wordpress/YiiEmbed.php');
@@ -66,6 +69,10 @@ add_option('yii_embed', array(
 
 // load language
 load_plugin_textdomain('yii-embed', false, basename(YII_EMBED_PATH) . '/languages');
+
+// setup yii entry script
+require_once(YII_EMBED_PATH . 'wordpress/YiiEmbedEntry.php');
+YiiEmbedEntry::init();
 
 // setup admin pages
 if (is_admin()) {
