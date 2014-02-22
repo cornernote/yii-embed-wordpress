@@ -156,4 +156,35 @@ class YiiEmbed
         return 'https://github.com/yiisoft/yii/releases/download/1.1.14/yii-1.1.14.f0fee9.zip';
     }
 
+    /**
+     * Registers the css and js scripts
+     * @return string
+     */
+    public static function registerScripts()
+    {
+        // only run if Yii was found
+        if (!YII_EMBED_YII_VERSION)
+            return;
+        // register css/js files
+        $assetsUrl = self::assetsUrl();
+        Yii::app()->clientScript->registerCssFile($assetsUrl . '/css/yii-embed.css');
+        Yii::app()->clientScript->registerCssFile($assetsUrl . '/js/yii-embed.js');
+    }
+
+    /**
+     * Returns the assets url
+     * @return string
+     */
+    public static function assetsUrl()
+    {
+        static $assetsUrl;
+        if ($assetsUrl !== null)
+            return $assetsUrl;
+        // only run if Yii was found
+        if (!YII_EMBED_YII_VERSION)
+            return $assetsUrl = false;
+        // publish the assets
+        return $assetsUrl = Yii::app()->assetManager->publish(Yii::getPathOfAlias('yii-embed.assets'), true, -1, YII_DEBUG);
+    }
+
 }
