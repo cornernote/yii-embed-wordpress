@@ -68,8 +68,8 @@ set_time_limit(60 * 10);
 @ini_set('zlib.output_compression', 0);
 
 // load classes
-require_once(dirname(__DIR__) . '/wordpress/YiiEmbed.php');
-require_once(dirname(__DIR__) . '/wordpress/YiiEmbedDownload.php');
+require_once(dirname(__DIR__) . '/includes/YiiEmbed.php');
+require_once(dirname(__DIR__) . '/includes/YiiEmbedDownload.php');
 
 // do the download
 YiiEmbedDownload::init()->download();

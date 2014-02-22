@@ -1,0 +1,4 @@
+<Files download.php>
+Order Allow,Deny
+Allow from All
+</Files>

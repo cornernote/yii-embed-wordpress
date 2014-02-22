@@ -58,24 +58,11 @@ define('YII_EMBED_PATH', __DIR__ . '/');
 // yii constants
 defined('YII_DEBUG') or define('YII_DEBUG', WP_DEBUG);
 
+// load debug
+if (YII_DEBUG)
+    require_once(YII_EMBED_PATH . 'includes/debug.php');
+
 // load YiiEmbed and Yii
-require_once(YII_EMBED_PATH . 'wordpress/YiiEmbed.php');
+require_once(YII_EMBED_PATH . 'includes/YiiEmbed.php');
 define('YII_EMBED_YII_VERSION', YiiEmbed::yiiVersion());
-
-// add default options
-add_option('yii_embed', array(
-    'yii_path' => '',
-));
-
-// load language
-load_plugin_textdomain('yii-embed', false, basename(YII_EMBED_PATH) . '/languages');
-
-// setup yii entry script
-require_once(YII_EMBED_PATH . 'wordpress/YiiEmbedEntry.php');
-YiiEmbedEntry::init();
-
-// setup admin pages
-if (is_admin()) {
-    require_once(YII_EMBED_PATH . 'wordpress/YiiEmbedAdmin.php');
-    YiiEmbedAdmin::init();
-}
+YiiEmbed::init();
