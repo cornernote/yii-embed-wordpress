@@ -34,10 +34,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-/** no theme */
-define('WP_USE_THEMES', false);
-
 // load wp-load
 $path = realpath(__DIR__ . '/../../../../');
 while ($path) {

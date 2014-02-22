@@ -44,4 +44,35 @@
 class YiiEmbedApplication extends CWebApplication
 {
 
+    /**
+     * @var array List of routes that will exit after running
+     * @see YiiEmbedApplication::runController()
+     */
+    public $exitRoutes = array();
+
+    /**
+     * Runs a Yii controller.
+     */
+    public function runController($route)
+    {
+        // run the controller
+        parent::runController($route);
+        // exit for some routes to prevent wordpress output
+        foreach ($this->exitRoutes as $exitRoute)
+            if (strpos($route, $exitRoute) === 0)
+                Yii::app()->end();
+    }
+
+    /**
+     * Output buffer callback to add CSS/JS to the page.
+     * @param $output
+     * @return mixed
+     * @see Yii::init()
+     */
+    public function renderClientScript($output)
+    {
+        $this->getClientScript()->render($output);
+        return $output;
+    }
+
 }

@@ -61,7 +61,7 @@ class YiiEmbedDownload
     {
         // header
         $this->output('<style>body{ font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }</style>');
-        $this->output('<h1>' . __('Yii Embed - Yii Framework Downloader') . '</h1>');
+        $this->output('<h1>' . __('Yii Framework Downloader') . '</h1>');
 
         // do the download
         if (!empty($_GET['force']) || !YiiEmbed::yiiVersion()) {

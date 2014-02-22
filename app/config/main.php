@@ -16,14 +16,18 @@ return array(
         'log',
         'errorHandler',
     ),
+    'exitRoutes' => array(
+        'gii',
+    ),
     'components' => array(
         'assetManager' => array(
             'basePath' => YII_EMBED_PATH . 'assets',
             'baseUrl' => YII_EMBED_URL . 'assets',
         ),
         'urlManager' => array(
+            'urlFormat' => 'path',
             'showScriptName' => false,
-            'baseUrl' => trailingslashit(get_option('home')) . 'yii',
+            'baseUrl' => untrailingslashit(get_option('home')),
         ),
         'db' => array(
             'connectionString' => 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME,

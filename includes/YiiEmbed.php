@@ -63,7 +63,14 @@ class YiiEmbed
         // create Yii app
         if (YII_EMBED_YII_VERSION) {
             require_once(YII_EMBED_PATH . 'includes/Yii.php');
-            Yii::init();
+            // create application
+            Yii::createApplication('YiiEmbedApplication', YII_EMBED_PATH . 'app/config/main.php');
+            // add YiiStrap
+            //Yii::app()->bootstrap->register();
+            // add output buffer for clientScript
+            ob_start(array(Yii::app(), 'renderClientScript'));
+            // handle yii controller
+            add_filter('template_redirect', 'YiiEmbed::runController');
         }
     }
 
@@ -72,12 +79,13 @@ class YiiEmbed
      */
     public static function activation()
     {
-        // create or activate page
+        // create or un-trash page
         $page = get_page_by_path('yii');
         if (!$page) {
             wp_insert_post(array(
                 'post_title' => 'Yii',
-                'post_content' => '[yii_embed_yii]',
+                'post_content' => 'This page is used by Yii Embed. Do not remove it or bad things will happen.',
+                'post_name' => 'yii',
                 'post_type' => 'page',
                 'post_status' => 'publish',
                 'post_category' => array(1),
@@ -157,7 +165,8 @@ class YiiEmbed
     }
 
     /**
-     * Registers the css and js scripts
+     * Registers the css and js scripts.
+     *
      * @return string
      */
     public static function registerScripts()
@@ -172,7 +181,8 @@ class YiiEmbed
     }
 
     /**
-     * Returns the assets url
+     * Assets URL
+     *
      * @return string
      */
     public static function assetsUrl()
@@ -187,4 +197,33 @@ class YiiEmbed
         return $assetsUrl = Yii::app()->assetManager->publish(Yii::getPathOfAlias('yii-embed.assets'), true, -1, YII_DEBUG);
     }
 
+    /**
+     * Callback to handle Yii controller on WordPress 404 page.
+     */
+    public static function runController()
+    {
+        global $wp_query, $posts, $post;
+        // ignore non-404 pages
+        if (!$wp_query->is_404)
+            return;
+        // get route
+        $url = parse_url(get_option('home'));
+        $route = explode('?', trim(str_replace($url['path'], '', $_SERVER['REQUEST_URI']), '/'));
+        // try to run the controller
+        try {
+            ob_start();
+            Yii::app()->runController($route[0]);
+            $content = ob_get_clean();
+        } catch (CHttpException $e) {
+            // got an exception, let wordpress handle the page
+            return;
+        }
+        // controller ran, not a 404
+        status_header(200);
+        $wp_query->is_404 = false;
+        // load the page
+        $posts = $wp_query->query(array('pagename' => 'yii'));
+        $post = $posts[0];
+        $post->post_content = $content;
+    }
 }

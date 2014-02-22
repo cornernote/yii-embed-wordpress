@@ -59,8 +59,10 @@ define('YII_EMBED_PATH', __DIR__ . '/');
 defined('YII_DEBUG') or define('YII_DEBUG', WP_DEBUG);
 
 // load debug
-if (YII_DEBUG)
+if (YII_DEBUG) {
     require_once(YII_EMBED_PATH . 'includes/debug.php');
+    require_once(YII_EMBED_PATH . 'includes/kint/Kint.class.php');
+}
 
 // load YiiEmbed and Yii
 require_once(YII_EMBED_PATH . 'includes/YiiEmbed.php');
