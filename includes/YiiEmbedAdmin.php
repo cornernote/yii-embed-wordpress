@@ -45,7 +45,7 @@ class YiiEmbedAdmin
 {
 
     /**
-     * Initialize the Admin callbacks and messages
+     * Initialize the Admin callbacks and messages.
      */
     public static function init()
     {
@@ -68,7 +68,7 @@ class YiiEmbedAdmin
     }
 
     /**
-     * Callback for yii_embed_admin_notice
+     * Callback for yii_embed_admin_notice.
      *
      * Example:
      * do_action('yii_embed_admin_notice', __('<p>Hello world!</p>'));

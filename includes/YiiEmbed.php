@@ -65,8 +65,8 @@ class YiiEmbed
             require_once(YII_EMBED_PATH . 'includes/Yii.php');
             // create application
             Yii::createApplication('YiiEmbedApplication', YII_EMBED_PATH . 'app/config/main.php');
-            // add YiiStrap
-            //Yii::app()->bootstrap->register();
+            // register scripts
+            self::registerScripts();
             // add output buffer for clientScript
             ob_start(array(Yii::app(), 'renderClientScript'));
             // handle yii controller
@@ -174,10 +174,13 @@ class YiiEmbed
         // only run if Yii was found
         if (!YII_EMBED_YII_VERSION)
             return;
-        // register css/js files
+
         $assetsUrl = self::assetsUrl();
-        Yii::app()->clientScript->registerCssFile($assetsUrl . '/css/yii-embed.css');
-        Yii::app()->clientScript->registerCssFile($assetsUrl . '/js/yii-embed.js');
+//        Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/bootstrap.min.css');
+//        if (is_admin())
+//            Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/wp-admin-fix.css');
+//        else
+//            Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/wp-front-fix.css');
     }
 
     /**
@@ -206,24 +209,34 @@ class YiiEmbed
         // ignore non-404 pages
         if (!$wp_query->is_404)
             return;
-        // get route
-        $url = parse_url(get_option('home'));
-        $route = explode('?', trim(str_replace($url['path'], '', $_SERVER['REQUEST_URI']), '/'));
         // try to run the controller
         try {
             ob_start();
-            Yii::app()->runController($route[0]);
+            Yii::app()->processRequest();
             $content = ob_get_clean();
         } catch (CHttpException $e) {
             // got an exception, let wordpress handle the page
             return;
         }
-        // controller ran, not a 404
-        status_header(200);
-        $wp_query->is_404 = false;
         // load the page
         $posts = $wp_query->query(array('pagename' => 'yii'));
         $post = $posts[0];
         $post->post_content = $content;
+        // callback to set the title
+        add_filter('wp_title', 'YiiEmbed::pageTitle');
+        // controller ran, not a 404
+        status_header(200);
+        $wp_query->is_404 = false;
     }
+
+    /**
+     * Callback to set the page title.
+     * @param $data
+     * @return mixed
+     */
+    public static function pageTitle($data)
+    {
+        return str_replace('Yii', Yii::app()->controller->pageTitle, $data);
+    }
+
 }

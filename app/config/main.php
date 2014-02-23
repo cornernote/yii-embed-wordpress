@@ -27,7 +27,6 @@ return array(
         'urlManager' => array(
             'urlFormat' => 'path',
             'showScriptName' => false,
-            'baseUrl' => untrailingslashit(get_option('home')),
         ),
         'db' => array(
             'connectionString' => 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME,
@@ -37,8 +36,8 @@ return array(
             'charset' => DB_CHARSET,
             'schemaCachingDuration' => 3600,
             'tablePrefix' => $table_prefix,
-            //'enableProfiling' => true,
-            //'enableParamLogging' => true,
+            'enableProfiling' => YII_DEBUG,
+            'enableParamLogging' => YII_DEBUG,
         ),
         'errorHandler' => array(
             'class' => 'audit.components.AuditErrorHandler',

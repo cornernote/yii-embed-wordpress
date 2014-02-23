@@ -37,6 +37,7 @@
 /**
  * YiiEmbedApplication
  *
+ * @property CController $controller The currently active controller, or the application controller.
  * @property TbApi $bootstrap
  *
  * @package yii-embed-wordpress
@@ -51,6 +52,11 @@ class YiiEmbedApplication extends CWebApplication
     public $exitRoutes = array();
 
     /**
+     * @var CController Stores the main application controller after runController completes.
+     */
+    public $appController;
+
+    /**
      * Runs a Yii controller.
      */
     public function runController($route)
@@ -61,6 +67,32 @@ class YiiEmbedApplication extends CWebApplication
         foreach ($this->exitRoutes as $exitRoute)
             if (strpos($route, $exitRoute) === 0)
                 Yii::app()->end();
+    }
+
+    /**
+     * Create a Controller
+     * If the owner is not set (means we are not in a module) then
+     * store the controller in $this->appController for later use.
+     *
+     * @param string $route
+     * @param null $owner
+     * @return array
+     */
+    public function createController($route, $owner = null)
+    {
+        $ca = parent::createController($route, $owner);
+        if (!$owner)
+            $this->appController = $ca[0];
+        return $ca;
+    }
+
+    /**
+     * @return CController the currently active controller, or if not set the application controller.
+     */
+    public function getController()
+    {
+        $controller = parent::getController();
+        return $controller ? $controller : $this->appController;
     }
 
     /**

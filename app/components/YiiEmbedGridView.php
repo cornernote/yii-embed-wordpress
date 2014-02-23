@@ -150,7 +150,7 @@ class YiiEmbedGridView extends TbGridView
         parent::registerClientScript();
 
         if ($this->multiActions || $this->gridActions || $this->gridButtons) {
-            //Yii::app()->clientScript->registerScriptFile(Yii::app()->dressing->getAssetsUrl() . '/js/jquery.form.js');
+            Yii::app()->clientScript->registerScriptFile(YiiEmbed::assetsUrl() . '/js/jquery.form.js');
             // put the url from the button into the form action
             // handle submit form to capture the response into a modal
             Yii::app()->controller->beginWidget('YiiEmbedJavaScriptWidget', array('position' => CClientScript::POS_END));
