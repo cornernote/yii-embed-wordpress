@@ -176,11 +176,11 @@ class YiiEmbed
             return;
 
         $assetsUrl = self::assetsUrl();
-//        Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/bootstrap.min.css');
-//        if (is_admin())
-//            Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/wp-admin-fix.css');
-//        else
-//            Yii::app()->clientScript->registerCssFile($assetsUrl . '/bootstrap/wp-front-fix.css');
+        $clientScript = Yii::app()->clientScript;
+        if (is_admin()) {
+            $clientScript->registerCssFile($assetsUrl . '/bootstrap/bootstrap.min.css');
+            $clientScript->registerCss('wp-admin-fix', 'select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input { height: auto; }');
+        }
     }
 
     /**
