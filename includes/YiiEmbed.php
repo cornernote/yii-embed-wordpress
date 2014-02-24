@@ -219,6 +219,7 @@ class YiiEmbed
         $posts = $wp_query->query(array('pagename' => 'yii'));
         $post = $posts[0];
         $post->post_content = $content;
+        $post->post_title = Yii::app()->controller->pageTitle;
         // callback to set the title
         add_filter('wp_title', 'YiiEmbed::pageTitle');
         // controller ran, not a 404
