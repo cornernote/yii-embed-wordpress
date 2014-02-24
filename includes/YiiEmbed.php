@@ -99,7 +99,9 @@ class YiiEmbed
         }
         // add options
         delete_option('yii_embed');
-        add_option('yii_embed', array('yii_path' => ''));
+        add_option('yii_embed', array(
+            'yii_path' => '',
+        ));
     }
 
     /**
@@ -175,9 +177,37 @@ class YiiEmbed
         if (!YII_EMBED_YII_VERSION)
             return;
 
-        Yii::app()->bootstrap->register();
-        if (is_admin())
-            Yii::app()->clientScript->registerCss('wp-admin-fix', 'body{background-color:transparent;}ul,ol{margin:0;}select,textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{height:auto;}');
+        $options = get_option('yii_embed');
+        $bootstrap = Yii::app()->bootstrap;
+
+        // admin css/js
+        if (is_admin()) {
+            if (!empty($options['admin_bootstrap_css'])) {
+                $bootstrap->registerCoreCss();
+                Yii::app()->clientScript->registerCss('wp-bs-admin-fix', 'body{background-color:transparent;}ul,ol{margin:0;}select,textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{height:auto;}');
+            }
+            if (!empty($options['admin_bootstrap_css_responsive']))
+                $bootstrap->registerResponsiveCss();
+            if (!empty($options['admin_bootstrap_js']))
+                $bootstrap->registerCoreScripts();
+            if (!empty($options['admin_bootstrap_js_popover']))
+                $bootstrap->registerPopover();
+            if (!empty($options['admin_bootstrap_js_tooltip']))
+                $bootstrap->registerTooltip();
+        }
+        // front css/js
+        else {
+            if (!empty($options['front_bootstrap_css']))
+                $bootstrap->registerCoreCss();
+            if (!empty($options['front_bootstrap_css_responsive']))
+                $bootstrap->registerResponsiveCss();
+            if (!empty($options['front_bootstrap_js']))
+                $bootstrap->registerCoreScripts();
+            if (!empty($options['front_bootstrap_js_popover']))
+                $bootstrap->registerPopover();
+            if (!empty($options['front_bootstrap_js_tooltip']))
+                $bootstrap->registerTooltip();
+        }
     }
 
     /**

@@ -83,11 +83,25 @@ class YiiEmbedSettings
         // register the setting and validation callback
         register_setting('yii_embed', 'yii_embed', array($this, 'validate'));
 
-        // add the settings section
-        add_settings_section('yii_embed', '', array($this, 'settings_section_yii_embed'), 'yii-embed-settings');
+        // yii settings
+        add_settings_section('yii', '', array($this, 'settings_section_yii'), 'yii-embed-settings');
+        add_settings_field('yii_embed_yii_path', __('Yii Path'), array($this, 'settings_field_yii_path'), 'yii-embed-settings', 'yii');
 
-        // add the yii_path field
-        add_settings_field('yii_embed_yii_path', __('Yii Path'), array($this, 'settings_field_yii_path'), 'yii-embed-settings', 'yii_embed');
+        // admin bootstrap settings
+        add_settings_section('admin_bootstrap', '', array($this, 'settings_section_admin_bootstrap'), 'yii-embed-settings');
+        add_settings_field('yii_embed_admin_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_admin_bootstrap_css'), 'yii-embed-settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_admin_bootstrap_css_responsive'), 'yii-embed-settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_admin_bootstrap_js'), 'yii-embed-settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_admin_bootstrap_js_popover'), 'yii-embed-settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_admin_bootstrap_js_tooltip'), 'yii-embed-settings', 'admin_bootstrap');
+
+        // front bootstrap settings
+        add_settings_section('front_bootstrap', '', array($this, 'settings_section_front_bootstrap'), 'yii-embed-settings');
+        add_settings_field('yii_embed_front_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_front_bootstrap_css'), 'yii-embed-settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_front_bootstrap_css_responsive'), 'yii-embed-settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_front_bootstrap_js'), 'yii-embed-settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_front_bootstrap_js_popover'), 'yii-embed-settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_front_bootstrap_js_tooltip'), 'yii-embed-settings', 'front_bootstrap');
     }
 
     /**
@@ -172,9 +186,9 @@ class YiiEmbedSettings
     /**
      * Callback to add the section settings
      */
-    public static function settings_section_yii_embed()
+    public static function settings_section_yii()
     {
-        //echo __('Yii Embed Settings:');
+        echo '<h2>' . __('Yii Settings') . '</h2>';
     }
 
     /**
@@ -183,9 +197,128 @@ class YiiEmbedSettings
     public function settings_field_yii_path()
     {
         echo strtr('<input type="text" id="yii_embed_yii_path" name="yii_embed[yii_path]" class="regular-text" value=":value" /><p class="description">:description :default_path</p>', array(
-            ':value' => isset($this->options['yii_path']) ? esc_attr($this->options['yii_path']) : '',
+            ':value' => !empty($this->options['yii_path']) ? esc_attr($this->options['yii_path']) : '',
             ':description' => __('Full path the the folder that contains Yii\'s "framework" folder.'),
             ':default_path' => empty($this->options['yii_path']) ? '<br/>' . __('Default:') . ' ' . YiiEmbed::yiiPath() : '',
+        ));
+    }
+
+    /**
+     * Callback to add the section settings
+     */
+    public static function settings_section_admin_bootstrap()
+    {
+        echo '<h2>' . __('Admin Bootstrap Settings') . '</h2>';
+        echo '<p>' . __('Choose which bootstrap styles and scripts should be enabled in the Administration theme.') . '</p>';
+    }
+
+    /**
+     * Callback to add the admin_bootstrap_css setting field
+     */
+    public function settings_field_admin_bootstrap_css()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_admin_bootstrap_css" name="yii_embed[admin_bootstrap_css]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['admin_bootstrap_css']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the admin_bootstrap_css_responsive setting field
+     */
+    public function settings_field_admin_bootstrap_css_responsive()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_admin_bootstrap_css_responsive" name="yii_embed[admin_bootstrap_css_responsive]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['admin_bootstrap_css_responsive']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the admin_bootstrap_js setting field
+     */
+    public function settings_field_admin_bootstrap_js()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_admin_bootstrap_js" name="yii_embed[admin_bootstrap_js]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['admin_bootstrap_js']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the admin_bootstrap_js_popover setting field
+     */
+    public function settings_field_admin_bootstrap_js_popover()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_admin_bootstrap_js_popover" name="yii_embed[admin_bootstrap_js_popover]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['admin_bootstrap_js_popover']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the admin_bootstrap_js_tooltip setting field
+     */
+    public function settings_field_admin_bootstrap_js_tooltip()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_admin_bootstrap_js_tooltip" name="yii_embed[admin_bootstrap_js_tooltip]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['admin_bootstrap_js_tooltip']) ? 'checked="checked"' : '',
+        ));
+    }
+
+
+    /**
+     * Callback to add the section settings
+     */
+    public static function settings_section_front_bootstrap()
+    {
+        echo '<h2>' . __('Front Bootstrap Settings') . '</h2>';
+        echo '<p>' . __('Choose which bootstrap styles and scripts should be enabled in the Front-End theme.') . '</p>';
+    }
+
+    /**
+     * Callback to add the front_bootstrap_css setting field
+     */
+    public function settings_field_front_bootstrap_css()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_front_bootstrap_css" name="yii_embed[front_bootstrap_css]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['front_bootstrap_css']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the front_bootstrap_css_responsive setting field
+     */
+    public function settings_field_front_bootstrap_css_responsive()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_front_bootstrap_css_responsive" name="yii_embed[front_bootstrap_css_responsive]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['front_bootstrap_css_responsive']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the front_bootstrap_js setting field
+     */
+    public function settings_field_front_bootstrap_js()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_front_bootstrap_js" name="yii_embed[front_bootstrap_js]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['front_bootstrap_js']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the front_bootstrap_js_popover setting field
+     */
+    public function settings_field_front_bootstrap_js_popover()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_front_bootstrap_js_popover" name="yii_embed[front_bootstrap_js_popover]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['front_bootstrap_js_popover']) ? 'checked="checked"' : '',
+        ));
+    }
+
+    /**
+     * Callback to add the front_bootstrap_js_tooltip setting field
+     */
+    public function settings_field_front_bootstrap_js_tooltip()
+    {
+        echo strtr('<input type="checkbox" id="yii_embed_front_bootstrap_js_tooltip" name="yii_embed[front_bootstrap_js_tooltip]" value="1" :checked />', array(
+            ':checked' => !empty($this->options['front_bootstrap_js_tooltip']) ? 'checked="checked"' : '',
         ));
     }
 
