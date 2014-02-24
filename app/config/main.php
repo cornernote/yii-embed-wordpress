@@ -39,6 +39,9 @@ return array(
             'enableProfiling' => YII_DEBUG,
             'enableParamLogging' => YII_DEBUG,
         ),
+        'clientScript' => array(
+            'class' => 'YiiEmbedClientScript',
+        ),
         'errorHandler' => array(
             'class' => 'audit.components.AuditErrorHandler',
             'errorAction' => 'yiiEmbedSite/error',

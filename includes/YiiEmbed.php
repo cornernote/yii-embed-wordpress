@@ -65,12 +65,12 @@ class YiiEmbed
             require_once(YII_EMBED_PATH . 'includes/Yii.php');
             // create application
             Yii::createApplication('YiiEmbedApplication', YII_EMBED_PATH . 'app/config/main.php');
-            // register scripts
-            self::registerScripts();
             // add output buffer for clientScript
-            ob_start(array(Yii::app(), 'renderClientScript'));
+            ob_start('YiiEmbed::renderClientScript');
             // handle yii controller
             add_filter('template_redirect', 'YiiEmbed::runController');
+            // register scripts
+            self::registerScripts();
         }
     }
 
@@ -175,12 +175,11 @@ class YiiEmbed
         if (!YII_EMBED_YII_VERSION)
             return;
 
-        $assetsUrl = self::assetsUrl();
+        //$assetsUrl = self::assetsUrl();
         $clientScript = Yii::app()->clientScript;
-        if (is_admin()) {
-            $clientScript->registerCssFile($assetsUrl . '/bootstrap/bootstrap.min.css');
-            $clientScript->registerCss('wp-admin-fix', 'select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input { height: auto; }');
-        }
+        Yii::app()->bootstrap->register();
+        if (is_admin())
+            $clientScript->registerCss('wp-admin-fix', 'body{background-color:transparent;}ul,ol{margin:0;}select,textarea,input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input{height:auto;}');
     }
 
     /**
@@ -237,6 +236,20 @@ class YiiEmbed
     public static function pageTitle($data)
     {
         return str_replace('Yii', Yii::app()->controller->pageTitle, $data);
+    }
+
+
+    /**
+     * Output buffer callback to add CSS/JS to the page.
+     * @param $output
+     * @return mixed
+     * @see Yii::init()
+     */
+    public static function renderClientScript($output)
+    {
+        Yii::app()->clientScript->render = true;
+        Yii::app()->clientScript->render($output);
+        return $output;
     }
 
 }

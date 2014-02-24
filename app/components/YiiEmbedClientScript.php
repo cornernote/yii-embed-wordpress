@@ -35,65 +35,28 @@
  */
 
 /**
- * YiiEmbedApplication
- *
- * @property YiiEmbedController $controller The currently active controller, or the application controller.
- * @property YiiEmbedClientScript $clientScript The client script manager.
- * @property TbApi $bootstrap
+ * YiiEmbedClientScript
  *
  * @package yii-embed-wordpress
  */
-class YiiEmbedApplication extends CWebApplication
+class YiiEmbedClientScript extends CClientScript
 {
 
     /**
-     * @var array List of routes that will exit after running
-     * @see YiiEmbedApplication::runController()
+     * @var bool Set to true to allow scripts to be rendered.
      */
-    public $exitRoutes = array();
+    public $render = false;
 
     /**
-     * @var CController Stores the main application controller after runController completes.
-     */
-    public $appController;
-
-    /**
-     * Runs a Yii controller.
-     */
-    public function runController($route)
-    {
-        // run the controller
-        parent::runController($route);
-        // exit for some routes to prevent wordpress output
-        foreach ($this->exitRoutes as $exitRoute)
-            if (strpos($route, $exitRoute) === 0)
-                Yii::app()->end();
-    }
-
-    /**
-     * Create a Controller
-     * If the owner is not set (means we are not in a module) then
-     * store the controller in $this->appController for later use.
+     * Renders the registered scripts.
+     * Prevents rendering at the end of the controller, and waits until $this->render is true.
      *
-     * @param string $route
-     * @param null $owner
-     * @return array
+     * @param string $output the existing output that needs to be inserted with script tags
      */
-    public function createController($route, $owner = null)
+    public function render(&$output)
     {
-        $ca = parent::createController($route, $owner);
-        if (!$owner)
-            $this->appController = $ca[0];
-        return $ca;
+        if (!$this->render)
+            return;
+        parent::render($output);
     }
-
-    /**
-     * @return CController the currently active controller, or if not set the application controller.
-     */
-    public function getController()
-    {
-        $controller = parent::getController();
-        return $controller ? $controller : $this->appController;
-    }
-
 }
