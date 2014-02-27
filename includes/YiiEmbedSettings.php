@@ -142,13 +142,13 @@ class YiiEmbedSettings
         }
 
         // check if framework/yii.php exists in the path
-        if (!file_exists($path . '/framework/yii.php')) {
-            add_settings_error('yii_embed_yii_path', 'yii_path_not_yii_file_exists', __('The Yii Path entered does not contain framework/yii.php.'));
+        if (!file_exists($path . '/framework/YiiBase.php')) {
+            add_settings_error('yii_embed_yii_path', 'yii_path_not_yii_file_exists', __('The Yii Path entered does not contain framework/YiiBase.php.'));
             return $path;
         }
 
         // check the Yii version
-        require_once($path . '/framework/yii.php');
+        require_once($path . '/framework/YiiBase.php');
         if (!method_exists('Yii', 'getVersion')) {
             add_settings_error('yii_embed_yii_path', 'yii_path_not_yii_version', __('The framework/yii.php does not appear to be a valid Yii.'));
             return $path;
