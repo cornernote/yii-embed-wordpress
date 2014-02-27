@@ -68,6 +68,26 @@ class YiiEmbedAdmin
     }
 
     /**
+     * Callback to handle Yii controller on WordPress administration page.
+     */
+    public static function page()
+    {
+        // hide the submenu
+        Yii::app()->clientScript->registerCss('hide-submenu', '.wp-has-current-submenu .wp-submenu{ display:none; }');
+        // get the route
+        $page = isset($_GET['page']) ? $_GET['page'] : null;
+        $route = str_replace('-', '/', str_replace('yii-embed-', '', $page));
+        // try run controller
+        try {
+            ob_start();
+            Yii::app()->runController($route);
+            echo ob_get_clean();
+        } catch (CHttpException $e) {
+            // got an exception, let wordpress handle the page
+        }
+    }
+
+    /**
      * Callback for yii_embed_admin_notice.
      *
      * Example:

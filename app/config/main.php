@@ -25,7 +25,9 @@ return array(
             'baseUrl' => YII_EMBED_URL . 'assets',
         ),
         'urlManager' => array(
-            'urlFormat' => 'path',
+            'class' => 'YiiEmbedUrlManager',
+            'urlFormat' => is_admin() ? 'get' : 'path',
+            'baseUrl' => is_admin() ? '?page=yii-embed' : null,
             'showScriptName' => false,
         ),
         'db' => array(
