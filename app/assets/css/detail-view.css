@@ -1,0 +1,12 @@
+/**
+ * Detail View
+ */
+
+table.detail-view.table-bordered tbody tr th {
+    color: #fff;
+    background: #b5b5b5;
+}
+
+table.detail-view.table-bordered tbody tr th a {
+    color: #fff;
+}

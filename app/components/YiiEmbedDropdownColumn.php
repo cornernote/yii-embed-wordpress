@@ -84,7 +84,7 @@ class YiiEmbedDropdownColumn extends TbDataColumn
         $parentContents = ob_get_clean();
 
         $links = array();
-        if ($data instanceof YiiEmbedActiveRecord) {
+        if ($data instanceof CActiveRecord) {
             $links[] = array(
                 'label' => $parentContents,
                 'url' => $data->getUrl(),

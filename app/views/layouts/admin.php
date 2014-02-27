@@ -15,4 +15,5 @@ if ($this->menu) {
     ));
 }
 
+echo Yii::app()->user->multiFlash();
 echo $content;

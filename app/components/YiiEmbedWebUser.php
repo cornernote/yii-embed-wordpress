@@ -35,67 +35,72 @@
  */
 
 /**
- * YiiEmbedApplication
- *
- * @property YiiEmbedController $controller
- * @property YiiEmbedClientScript $clientScript
- * @property YiiEmbedReturnUrl $returnUrl
- * @property YiiEmbedWebUser $user
- * @property TbApi $bootstrap
+ * YiiEmbedWebUser
  *
  * @package yii-embed-wordpress
  */
-class YiiEmbedApplication extends CWebApplication
+class YiiEmbedWebUser extends CWebUser
 {
 
     /**
-     * @var array List of routes that will exit after running
-     * @see YiiEmbedApplication::runController()
+     * Prefix used on flash messages.
      */
-    public $exitRoutes = array();
+    const KEY_PREFIX = 'wuf';
 
     /**
-     * @var CController Stores the main application controller after runController completes.
+     * Maximum number of flash messages.
      */
-    public $appController;
+    const STACK_LIMIT = 100;
 
     /**
-     * Runs a Yii controller.
+     * Add flash to the stack.
+     * @param string $msg
+     * @param string $class
      */
-    public function runController($route)
+    public function addFlash($msg, $class = 'info')
     {
-        // run the controller
-        parent::runController($route);
-        // exit for some routes to prevent wordpress output
-        foreach ($this->exitRoutes as $exitRoute)
-            if (strpos($route, $exitRoute) === 0)
-                Yii::app()->end();
+        $key = $this->getNextMultiFlashKey();
+        if ($key === false)
+            Yii::trace('Stack overflow in addFlash', 'account.components.AccountWebUserFlashBehavior.addFlash()');
+        else
+            $this->setFlash($key, array($msg, $class));
     }
 
     /**
-     * Create a Controller
-     * If the owner is not set (means we are not in a module) then
-     * store the controller in $this->appController for later use.
-     *
-     * @param string $route
-     * @param null $owner
-     * @return array
+     * Returns next flash key for addFlash function.
+     * @return string|bool string if ok or false if there was stack overflow.
      */
-    public function createController($route, $owner = null)
+    protected function getNextMultiFlashKey()
     {
-        $ca = parent::createController($route, $owner);
-        if (!$owner)
-            $this->appController = $ca[0];
-        return $ca;
+        $counters = $this->getState(CWebUser::FLASH_COUNTERS, array());
+        if (empty($counters)) return self::KEY_PREFIX . '1';
+        for ($i = 1; $i <= self::STACK_LIMIT; $i++) {
+            $key = self::KEY_PREFIX . (string)$i;
+            if (array_key_exists($key, $counters)) continue;
+            return $key;
+        }
+        return false;
     }
 
     /**
-     * @return CController the currently active controller, or if not set the application controller.
+     * Gets all flashes and shows them to the user.
+     * Every flash is div with css class 'alert' and another 'alert_xxx' where xxx is the $class parameter set in addFlash function.
+     * Examples:
+     * Yii::app()->user->addFlash('My text', 'warning');
+     * Yii::app()->multiFlash();
+     * Output is <div class="alert alert-warning">My text<div>
+     * @return string
      */
-    public function getController()
+    public function multiFlash()
     {
-        $controller = parent::getController();
-        return $controller ? $controller : $this->appController;
+        $output = '';
+        for ($i = 1; $i <= self::STACK_LIMIT; $i++) {
+            $key = self::KEY_PREFIX . (string)$i;
+            if (!$this->hasFlash($key)) break;
+            list($msg, $class) = $this->getFlash($key);
+            $output .= "<div class=\"alert alert-$class\">$msg</div>\n";
+        }
+        return $output;
     }
 
 }

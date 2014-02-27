@@ -24,11 +24,14 @@ return array(
             'basePath' => YII_EMBED_PATH . 'assets',
             'baseUrl' => YII_EMBED_URL . 'assets',
         ),
-        'urlManager' => array(
-            'class' => 'YiiEmbedUrlManager',
-            'urlFormat' => is_admin() ? 'get' : 'path',
-            'baseUrl' => is_admin() ? '?page=yii-embed' : null,
-            'showScriptName' => false,
+        'bootstrap' => array(
+            'class' => 'bootstrap.components.TbApi',
+        ),
+        'cache' => array(
+            'class' => 'CFileCache',
+        ),
+        'clientScript' => array(
+            'class' => 'YiiEmbedClientScript',
         ),
         'db' => array(
             'connectionString' => 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME,
@@ -41,21 +44,21 @@ return array(
             'enableProfiling' => YII_DEBUG,
             'enableParamLogging' => YII_DEBUG,
         ),
-        'clientScript' => array(
-            'class' => 'YiiEmbedClientScript',
-        ),
         'errorHandler' => array(
             'class' => 'audit.components.AuditErrorHandler',
             'errorAction' => 'yiiEmbedSite/error',
         ),
-        'bootstrap' => array(
-            'class' => 'bootstrap.components.TbApi',
-        ),
         'returnUrl' => array(
             'class' => 'YiiEmbedReturnUrl',
         ),
-        'cache' => array(
-            'class' => 'CFileCache',
+        'user' => array(
+            'class' => 'YiiEmbedWebUser',
+        ),
+        'urlManager' => array(
+            'class' => 'YiiEmbedUrlManager',
+            'urlFormat' => is_admin() ? 'get' : 'path',
+            'baseUrl' => is_admin() ? '?page=yii-embed' : null,
+            'showScriptName' => false,
         ),
     ),
     'modules' => array(

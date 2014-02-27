@@ -47,4 +47,13 @@ class YiiEmbedDetailView extends TbDetailView
      */
     public $type = array('striped', 'condensed', 'bordered');
 
+    /**
+     *
+     */
+    public function init()
+    {
+        parent::init();
+        Yii::app()->clientScript->registerCssFile(YiiEmbed::assetsUrl() . '/css/detail-view.css');
+    }
+
 }

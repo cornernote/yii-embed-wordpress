@@ -148,7 +148,7 @@ class YiiEmbedGridView extends TbGridView
     public function registerClientScript()
     {
         parent::registerClientScript();
-
+        Yii::app()->clientScript->registerCssFile(YiiEmbed::assetsUrl() . '/css/grid-view.css');
         if ($this->multiActions || $this->gridActions || $this->gridButtons) {
             Yii::app()->clientScript->registerScriptFile(YiiEmbed::assetsUrl() . '/js/jquery.form.js');
             // put the url from the button into the form action
