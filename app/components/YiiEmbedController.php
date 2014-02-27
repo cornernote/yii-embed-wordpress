@@ -42,4 +42,152 @@
 class YiiEmbedController extends CController
 {
 
+    /**
+     * @var string
+     */
+    public $layout = 'application.views.layouts.admin';
+
+    /**
+     * @var array context menu items. This property will be assigned to {@link CMenu::items}.
+     */
+    public $menu = array();
+
+    /**
+     * @var array breadcrumbs links to current page. This property will be assigned to {@link CBreadcrumbs::links}.
+     */
+    protected $_breadcrumbs = array();
+
+    /**
+     * @var
+     */
+    protected $_pageHeading;
+
+    /**
+     * @var
+     */
+    protected $_loadModel;
+
+    /**
+     * @return string Defaults to the controllers pageTitle.
+     */
+    public function getPageHeading()
+    {
+        if ($this->_pageHeading === null)
+            $this->_pageHeading = $this->pageTitle;
+        return $this->_pageHeading;
+    }
+
+    /**
+     * @param $pageHeading string
+     */
+    public function setPageHeading($pageHeading)
+    {
+        $this->_pageHeading = $pageHeading;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBreadcrumbs()
+    {
+        return $this->_breadcrumbs;
+    }
+
+    /**
+     * @param string $breadcrumbs
+     */
+    public function setBreadcrumbs($breadcrumbs)
+    {
+        $this->_breadcrumbs = $breadcrumbs;
+    }
+
+    /**
+     * @param string $name
+     * @param array|string $link
+     */
+    public function addBreadcrumb($name, $link = null)
+    {
+        if ($link)
+            $this->_breadcrumbs[$name] = $link;
+        else
+            $this->_breadcrumbs[] = $name;
+    }
+
+    /**
+     *
+     */
+    public function getPageBreadcrumbs()
+    {
+        $breadcrumbs = $this->_breadcrumbs;
+        $breadcrumbs[] = $this->pageTitle;
+        return $breadcrumbs;
+    }
+
+    /**
+     * Loads a CActiveRecord or throw a CHTTPException
+     *
+     * @param $id
+     * @param bool|string $model
+     * @return CActiveRecord
+     * @throws CHttpException
+     */
+    public function loadModel($id, $model = false)
+    {
+        if (!$model)
+            $model = str_replace('Controller', '', get_class($this));
+        if ($this->_loadModel === null) {
+            $this->_loadModel = CActiveRecord::model($model)->findByPk($id);
+            if ($this->_loadModel === null)
+                throw new CHttpException(404, Yii::t('dressing', 'The requested page does not exist.'));
+        }
+        return $this->_loadModel;
+    }
+
+    /**
+     * Gets a submitted field
+     * used to be named getSubmittedField()
+     *
+     * @param $field
+     * @param null $model
+     * @return mixed
+     */
+    public function getSubmittedField($field, $model = null)
+    {
+        $return = null;
+        if ($model && isset($_GET[$model][$field])) {
+            $return = $_GET[$model][$field];
+        }
+        elseif ($model && isset($_POST[$model][$field])) {
+            $return = $_POST[$model][$field];
+        }
+        elseif (isset($_GET[$field])) {
+            $return = $_GET[$field];
+        }
+        elseif (isset($_POST[$field])) {
+            $return = $_POST[$field];
+        }
+        return $return;
+    }
+
+    /**
+     * @param $ids
+     * @return array
+     */
+    public function getGridIds($ids = null)
+    {
+        if (!$ids)
+            $ids = array();
+        if (!is_array($ids))
+            $ids = explode(',', $ids);
+        foreach ($_REQUEST as $k => $v) {
+            if (strpos($k, '-grid_c0') === false || !is_array($v))
+                continue;
+            foreach ($v as $vv) {
+                $ids[$vv] = $vv;
+            }
+        }
+        return $ids;
+    }
+
+
 }
