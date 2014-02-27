@@ -39,6 +39,7 @@
  *
  * @property YiiEmbedController $controller The currently active controller, or the application controller.
  * @property YiiEmbedClientScript $clientScript The client script manager.
+ * @property YiiEmbedReturnUrl $returnUrl
  * @property TbApi $bootstrap
  *
  * @package yii-embed-wordpress
