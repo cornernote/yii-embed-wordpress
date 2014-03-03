@@ -42,7 +42,7 @@ table.table tbody tr:hover td, .table tbody tr:hover th {
     background-color: inherit;
 }
 
-table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth-child(odd) th {
+.grid-view table.table-striped tbody tr:nth-child(odd) td,.grid-view table.table-striped tbody tr:nth-child(odd) th {
     background-color: #f7f7f7;
 }
 
