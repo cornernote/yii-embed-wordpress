@@ -1,4 +1,52 @@
 /**
+ * Tables
+ */
+
+.detail-view table.table thead tr {
+    color: #fff;
+    background: #B5B5B5;
+}
+
+.detail-view table.table tr.filters {
+    background: #FFF;
+}
+
+.detail-view table.table thead tr a {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.detail-view table.table thead tr a:hover {
+    text-decoration: none;
+}
+
+.detail-view table.table-bordered {
+    border-color: #B5B5B5;
+}
+
+.detail-view table.table-bordered tr th, .detail-view table.table-bordered tr td {
+    border-left: 0;
+}
+
+.detail-view table.table-bordered > tr > th:first-child,
+.detail-view table.table-bordered > tr > td:first-child,
+.detail-view table.table-bordered > thead > tr > th:first-child,
+.detail-view table.table-bordered > thead > tr > td:first-child,
+.detail-view table.table-bordered > tbody > tr > th:first-child,
+.detail-view table.table-bordered > tbody > tr > td:first-child {
+    border-left: 1px solid #B5B5B5;
+}
+
+.detail-view table.table tbody tr:hover td, .detail-view .table tbody tr:hover th {
+    background-color: inherit;
+}
+
+.detail-view table.table-striped tbody tr:nth-child(odd) td, .detail-view table.table-striped tbody tr:nth-child(odd) th {
+    background-color: #f7f7f7;
+}
+
+/**
  * Detail View
  */
 
