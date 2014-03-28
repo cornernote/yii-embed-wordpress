@@ -200,7 +200,7 @@
         <h3 id="usage/plugin">Creating a Plugin</h3>
 
         <p>In this example we will create a WordPress plugin called Foo.
-            It will contain a controller called BarController with very simple functionality.</p>
+            It will contain a controller called BarController with basic functionality.</p>
 
         <h4>Directory Structure</h4>
         <pre>wp-content/plugins/foo/              -- folder containing your plugin
@@ -776,7 +776,7 @@ class FooBar extends YiiEmbedActiveRecord
         <pre class="prettyprint linenums lang-php">&lt;div class="view"&gt;
 
             &lt;b&gt;&lt;?php echo CHtml::encode($data-&gt;getAttributeLabel('name')); ?&gt;:&lt;/b&gt;
-            &lt;?php echo CHtml::encode($data-&gt;name); ?&gt;
+            &lt;?php echo CHtml::link($data->name, array('fooBar/view', 'id' =&gt; $data->id)); ?&gt;
             &lt;br/&gt;
 
             &lt;b&gt;&lt;?php echo CHtml::encode($data-&gt;getAttributeLabel('description')); ?&gt;:&lt;/b&gt;
@@ -868,7 +868,6 @@ $this->pageTitle = Yii::t('foo', 'View FooBar #:id', array(':id' => $model->id))
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,
     'attributes' => array(
-        'id',
         'name',
         'description',
     ),
