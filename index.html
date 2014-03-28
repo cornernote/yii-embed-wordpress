@@ -224,8 +224,13 @@
             FooBar.php               -- example model
         views/                       -- view files
             fooBar/                  -- view files for FooBarController
+                _form.php            -- form partial
+                _view.php            -- view partial
                 admin.php            -- admin page
-                front.php            -- front page
+                create.php           -- create page
+                index.php            -- front page
+                update.php           -- update page
+                view.php             -- view page
 </pre>
 
         <h4>Database Schema</h4>
@@ -601,30 +606,107 @@ class FooBarController extends FooController
     public function beforeAction($action)
     {
         if (is_admin()) {
-            if (in_array($action->id, array('admin')))
+            if (in_array($action->id, array('admin', 'view', 'create', 'update', 'delete')))
                 return true;
         }
         else {
-            if (in_array($action->id, array('front')))
+            if (in_array($action->id, array('index', 'view')))
                 return true;
         }
         return false;
     }
 
     /**
-     * Admin Page
+     * Admin
      */
     public function actionAdmin()
     {
-        $this->render('admin');
+        $model = new FooBar('search');
+        $model->unsetAttributes(); // clear any default values
+        if (isset($_GET['FooBar']))
+            $model->attributes = $_GET['FooBar'];
+
+        $this->render('admin', array(
+            'model' => $model,
+        ));
     }
 
     /**
-     * Front Page
+     * Create
      */
-    public function actionFront()
+    public function actionCreate()
     {
-        $this->render('front');
+        $model = new FooBar('create');
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['FooBar'])) {
+            $model->attributes = $_POST['FooBar'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('create', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     * Update
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->loadModel($id);
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['FooBar'])) {
+            $model->attributes = $_POST['FooBar'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('update', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     * Delete
+     * @param integer $id the ID of the model to be deleted
+     */
+    public function actionDelete($id)
+    {
+        $this->loadModel($id)->delete();
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+    }
+
+    /**
+     * Index
+     */
+    public function actionIndex()
+    {
+        $dataProvider = new CActiveDataProvider('FooBar');
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    /**
+     * View Page
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id)
+    {
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+        ));
     }
 }</pre>
 
@@ -654,20 +736,143 @@ class FooBar extends YiiEmbedActiveRecord
     {
         return '{{foo_bar}}';
     }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        $rules = array();
+        if ($this->scenario == 'search') {
+            $rules[] = array('id, name, description', 'safe');
+        }
+        if (in_array($this->scenario, array('create', 'update'))) {
+            $rules[] = array('name, description', 'required');
+            $rules[] = array('name', 'length', 'max' => 255);
+        }
+        return $rules;
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search()
+    {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.description', $this->description, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
 }</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/_view.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;div class="view"&gt;
+
+            &lt;b&gt;&lt;?php echo CHtml::encode($data-&gt;getAttributeLabel('name')); ?&gt;:&lt;/b&gt;
+            &lt;?php echo CHtml::encode($data-&gt;name); ?&gt;
+            &lt;br/&gt;
+
+            &lt;b&gt;&lt;?php echo CHtml::encode($data-&gt;getAttributeLabel('description')); ?&gt;:&lt;/b&gt;
+            &lt;?php echo CHtml::encode($data-&gt;description); ?&gt;
+            &lt;br/&gt;
+
+        &lt;/div&gt;</pre>
 
         <h4><code>wp-content/plugins/foo/app/views/fooBar/admin.php</code></h4>
 
         <pre class="prettyprint linenums lang-php">&lt;?php
 $this->pageTitle = Yii::t('foo', 'FooBar Admin');
-echo CHtml::link(Yii::t('foo', 'Admin'), array('fooBar/admin'));</pre>
 
-        <h4><code>wp-content/plugins/foo/app/views/fooBar/front.php</code></h4>
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'foo-bar-grid',
+    'dataProvider' => $model->search(),
+    'filter' => $model,
+    'columns' => array(
+        'id',
+        'name',
+        'description',
+        array(
+            'class' => 'CButtonColumn',
+        ),
+    ),
+));</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/create.php</code></h4>
 
         <pre class="prettyprint linenums lang-php">&lt;?php
-$this->pageTitle = Yii::t('foo', 'FooBar Front');
-echo CHtml::link(Yii::t('foo', 'Front'), array('fooBar/front'));</pre>
+$this->pageTitle = Yii::t('foo', 'Create FooBar');
 
+$this->renderPartial('_form', array('model' => $model));</pre>
+
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/_form.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;div class="form"&gt;
+
+            &lt;?php $form = $this-&gt;beginWidget('CActiveForm', array(
+            'id' =&gt; 'foo-bar-form',
+            )); ?&gt;
+
+            &lt;?php echo $form-&gt;errorSummary($model); ?&gt;
+
+            &lt;div class="row"&gt;
+                &lt;?php echo $form-&gt;labelEx($model, 'name'); ?&gt;
+                &lt;?php echo $form-&gt;textField($model, 'name', array('size' =&gt; 60, 'maxlength' =&gt; 255)); ?&gt;
+                &lt;?php echo $form-&gt;error($model, 'name'); ?&gt;
+            &lt;/div&gt;
+
+            &lt;div class="row"&gt;
+                &lt;?php echo $form-&gt;labelEx($model, 'description'); ?&gt;
+                &lt;?php echo $form-&gt;textArea($model, 'description', array('rows' =&gt; 6, 'cols' =&gt; 50)); ?&gt;
+                &lt;?php echo $form-&gt;error($model, 'description'); ?&gt;
+            &lt;/div&gt;
+
+            &lt;div class="row buttons"&gt;
+                &lt;?php echo CHtml::submitButton($model-&gt;isNewRecord ? Yii::t('foo', 'Create') : Yii::t('foo', 'Save')); ?&gt;
+            &lt;/div&gt;
+
+            &lt;?php $this-&gt;endWidget(); ?&gt;
+
+        &lt;/div&gt;</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/index.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+$this->pageTitle = Yii::t('foo', 'FooBars');
+
+$this->widget('zii.widgets.CListView', array(
+    'dataProvider' => $dataProvider,
+    'itemView' => '_view',
+));</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/update.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+$this->pageTitle = Yii::t('foo', 'Update FooBar #:id', array(':id' => $model->id));
+
+$this->renderPartial('_form', array('model' => $model));</pre>
+
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/view.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+$this->pageTitle = Yii::t('foo', 'View FooBar #:id', array(':id' => $model->id));
+
+$this->widget('zii.widgets.CDetailView', array(
+    'data' => $model,
+    'attributes' => array(
+        'id',
+        'name',
+        'description',
+    ),
+));</pre>
 
         <h3 id="usage/examples">Examples</h3>
 
