@@ -1,0 +1,5 @@
+The logo is licensed under a Creative Commons Attribution-No Derivative Works 3.0 Unported License.
+
+source: http://s.w.org/about/images/logos/wordpress-logo-hoz-rgb.png
+link: http://wordpress.org/about/logos/
+license: http://wordpressfoundation.org/trademark-policy/
