@@ -24,7 +24,7 @@ foreach ($this->tableSchema->columns as $column) {
     echo "\$columns[] = array(\n";
     echo "    'name' => '" . $column->name . "',\n";
     if ($column->autoIncrement) {
-        echo "    'class' => 'DropdownColumn',\n";
+        echo "    'class' => 'YiiEmbedDropdownColumn',\n";
         echo "    'value' => '\$data->getIdString()',\n";
     }
     echo ");\n";

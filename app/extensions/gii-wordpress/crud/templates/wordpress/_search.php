@@ -16,8 +16,8 @@ echo " * @var \$this " . $this->controllerClass . "\n";
 echo " * @var \$" . lcfirst($this->modelClass) . " " . $this->modelClass . "\n";
 echo " */\n";
 echo "\n";
-echo "/** @var ActiveForm \$form */\n";
-echo "\$form = \$this->beginWidget('ActiveForm', array(\n";
+echo "/** @var YiiEmbedActiveForm \$form */\n";
+echo "\$form = \$this->beginWidget('YiiEmbedActiveForm', array(\n";
 echo "    //'action' => Yii::app()->createUrl(\$this->route),\n";
 echo "    //'layout' => TbHtml::FORM_LAYOUT_HORIZONTAL,\n";
 echo "    'method' => 'get',\n";
@@ -26,7 +26,7 @@ echo "));\n";
 echo "\$form->searchToggle('" . lcfirst($this->modelClass) . "-grid-search', '" . lcfirst($this->modelClass) . "-grid');\n";
 echo "\n";
 echo "echo '<fieldset>';\n";
-echo "echo '<legend>' . \$this->getName() . ' ' . Yii::t('app', 'Search') . '</legend>';\n";
+echo "echo '<legend>" . $this->modelClass . " ' . Yii::t('app', 'Search') . '</legend>';\n";
 foreach ($this->tableSchema->columns as $column) {
     if ($column->type === 'boolean')
         $inputField = 'checkBoxControlGroup';
