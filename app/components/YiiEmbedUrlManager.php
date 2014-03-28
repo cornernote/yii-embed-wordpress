@@ -59,7 +59,7 @@ class YiiEmbedUrlManager extends CUrlManager
         if (isset($params['page']))
             unset($params['page']);
         if ($route !== '') {
-            $url .= '-' . str_replace('/', '-', $route);
+            $url .= '_' . str_replace('/', '_', $route);
             if (($query = $this->createPathInfo($params, '=', $ampersand)) !== '')
                 $url .= $ampersand . $query;
         }

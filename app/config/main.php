@@ -57,7 +57,7 @@ return array(
         'urlManager' => array(
             'class' => 'YiiEmbedUrlManager',
             'urlFormat' => is_admin() ? 'get' : 'path',
-            'baseUrl' => is_admin() ? '?page=yii-embed' : null,
+            'baseUrl' => is_admin() ? '?page=yii_embed' : null,
             'showScriptName' => false,
         ),
     ),
