@@ -37,15 +37,13 @@
 /**
  * YiiEmbedController
  *
+ * @property string $pageHeading
+ * @property array $breadcrumbs
+ *
  * @package yii-embed-wordpress
  */
 class YiiEmbedController extends CController
 {
-
-    /**
-     * @var string
-     */
-    public $layout = 'application.views.layouts.admin';
 
     /**
      * @var array context menu items. This property will be assigned to {@link CMenu::items}.
@@ -66,6 +64,15 @@ class YiiEmbedController extends CController
      * @var
      */
     protected $_loadModel;
+
+    /**
+     *
+     */
+    public function init()
+    {
+        // set the layout
+        $this->layout = is_admin() ? 'application.views.layouts.admin' : 'application.views.layouts.front';
+    }
 
     /**
      * @return string Defaults to the controllers pageTitle.
