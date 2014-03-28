@@ -70,6 +70,7 @@ class YiiEmbedController extends CController
      */
     public function init()
     {
+        parent::init();
         // set the layout
         $this->layout = is_admin() ? 'application.views.layouts.admin' : 'application.views.layouts.front';
     }
