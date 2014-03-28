@@ -1,79 +1,655 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A lightweight Yii application embedded into WordPress">
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Yii-Embed-Wordpress : A lightweight Yii application embedded into WordPress" />
+    <title>Yii Embed for WordPress</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+    <link href="css/bootstrap-flatly.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
 
-    <title>Yii-Embed-Wordpress</title>
-  </head>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-  <body>
+    <a href="https://github.com/cornernote/yii-embed-wordpress"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/cornernote/yii-embed-wordpress">View on GitHub</a>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Yii Embed for WordPress</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#features">Features</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#features/screenshots">Screenshots</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Installation <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#installation">Installation</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#installation/requirements">Requirements</a>
+                        </li>
+                        <li>
+                            <a href="#installation/installation">Installation</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuration <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#configuration">Configuration</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Usage <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#usage">Usage</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#usage/examples">Examples</a>
+                        </li>
+                        <li>
+                            <a href="#usage/gii">Gii Code Generator</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div id="header">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Yii Embed for WordPress</h1>
 
-          <h1 id="project_title">Yii-Embed-Wordpress</h1>
-          <h2 id="project_tagline">A lightweight Yii application embedded into WordPress</h2>
+            <p>A lightweight Yii application embedded into WordPress.</p>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/cornernote/yii-embed-wordpress/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/cornernote/yii-embed-wordpress/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+            <p>
+                <a class="btn btn-primary btn-lg" role="button" href="#installation">Installation</a>
+                <a class="btn btn-default btn-lg" role="button" href="#configuration">Configuration</a>
+                <a class="btn btn-default btn-lg" role="button" href="#usage">Usage</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="section">
+        <h2 id="features">Features</h2>
+        <ul>
+            <li>Yii is available after the <code>init</code> callback has been run in WordPress using <code>Yii::app()</code> or <code>Yii::foobar</code>
+            </li>
+            <li>Comes with YiiStrap (bootstrap for Yii).</li>
+            <li>Comes with Yii Audit Module (improved error handling and auditing).</li>
+            <li>Plugin will automatically download Yii framework for easier installation.</li>
+            <li>Uses Yii pretty error message and stack dump</li>
+            <li>...</li>
+        </ul>
+        <p>The following Yii components are pre-configured to work in your WordPress:</p>
+        <ul>
+            <li>
+                <code>Yii::app()-&gt;assetManager</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CAssetManager">CAssetManager</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;clientScript</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CClientScript">CClientScript</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;controller</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CController">CController</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;db</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CDbConnection">CDbConnection</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;errorHandler</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CErrorHandler">CErrorHandler</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;session</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CHttpSession">CHttpSession</a>
+            </li>
+            <li>
+                <code>Yii::app()-&gt;urlManager</code> -
+                <a href="http://www.yiiframework.com/doc/api/1.1/CUrlManager">CUrlManager</a>
+            </li>
+        </ul>
+
+        <h3 id="features/screenshots">Screenshots</h3>
+
+        <p>...</p>
+
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+    <div class="section">
+        <h2 id="installation">Installation</h2>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <p>Download the
+            <a href="https://github.com/cornernote/yii-embed-wordpress/releases/latest">latest release</a> or
+            <a href="https://github.com/cornernote/yii-embed-wordpress/archive/master.zip">development version</a> and uncompress the
+            <code>wp-content/plugins</code> folder into your wordpress.
+        </p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+        <h3 id="installation/requirements">Requirements</h3>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+        <p>The application has been tested with the following software versions, however should work with any minor revision change:</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+        <ul>
+            <li>
+                <a href="https://wordpress.org/latest.zip">WordPress-3.8.1</a> (should work in WordPress-3.8.*)
+            </li>
+            <li>
+                <a href="https://github.com/yiisoft/yii/releases/download/1.1.14/yii-1.1.14.f0fee9.zip">Yii-1.1.14</a> (should work in Yii-1.1.*)
+                <br/>Uncompress it into your <code>wp-content/plugins/yii-embed-wordpress/yii</code> folder. The
+                <code>yii.php</code> file should be in
+                <code>wp-content/plugins/yii-embed-wordpress/yii/framework/yii.php</code>. Alternatively you can use the built-in download manager to install Yii.
+            </li>
+        </ul>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+        <h3 id="installation/installation">Installation</h3>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+        <p>Browse to the plugin manager in the WordPress admin, then press Activate next to Yii Embed.</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+        <p>If Yii was not found you will be prompted to perform an Automatic Download or a Manual Download.</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+        <p>You can use an alternative path to Yii by browsing to the Yii Embed section under the WordPress admin Settings page.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+        <p>Search Engine Friendly permalinks must be enabled, see <a href="http://codex.wordpress.org/Using_Permalinks">this page for instructions</a>.</p>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Yii-Embed-Wordpress maintained by <a href="https://github.com/cornernote">cornernote</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <div class="section">
+        <h2 id="configuration">Configuration</h2>
+
+        <p>...</p>
+
     </div>
 
-    
+    <div class="section">
+        <h2 id="usage">Usage</h2>
 
-  </body>
+        <h3 id="usage/plugin">Creating a Plugin</h3>
+
+        <p>In this example we will create a WordPress plugin called Foo.</p>
+
+        <h4>Directory Structure</h4>
+        <pre>wp-content/plugins/foo/              -- folder containing your plugin
+    foo.php                          -- the plugin loader
+    includes/                        -- wordpress helper classes
+        Foo.php                      -- main static helper class
+        FooAdmin.php                 -- admin static helper class
+        FooSettings.php              -- admin options page
+    app/                             -- yii application
+        assets/                      -- assets folder
+            css/                     -- stylesheet files
+            img/                     -- image files
+            js/                      -- javascript files
+        components/                  -- application components (auto loaded)
+            FooController.php        -- base controller
+        controllers/                 -- controller classes
+        models/                      -- model classes
+        views/                       -- view files
+</pre>
+
+        <h4><code>wp-content/plugins/foo/foo.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * Plugin Name: Foo
+ */
+
+// do not allow direct entry here
+if (!function_exists('wp')) {
+    echo 'cannot be called directly';
+    exit;
+}
+
+// define constants
+define('FOO_URL', plugin_dir_url(__FILE__));
+define('FOO_PATH', __DIR__ . '/');
+
+// load plugin
+require_once(FOO_PATH . 'includes/Foo.php');
+Foo::init();</pre>
+
+        <h4><code>wp-content/plugins/foo/includes/Foo.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * Foo is the static helper class for Foo Plugin functionality.
+ */
+class Foo
+{
+
+    /**
+     * Initialize Foo
+     */
+    public static function init()
+    {
+        // load language
+        load_plugin_textdomain('foo', false, basename(FOO_PATH) . '/languages');
+        // runs when plugin is activated
+        register_activation_hook(FOO_PATH . 'foo.php', 'Foo::activation');
+        // runs on plugin deactivation
+        register_deactivation_hook(FOO_PATH . 'foo.php', 'Foo::deactivation');
+        // setup admin pages
+        if (is_admin()) {
+            require_once(FOO_PATH . 'includes/FooAdmin.php');
+            FooAdmin::init();
+        }
+        // init Yii
+        add_action('init', 'Foo::yiiInit');
+    }
+
+    /**
+     * Callback when the plugin is activated
+     */
+    public static function activation()
+    {
+        // add options
+        delete_option('foo');
+        add_option('foo', array(
+            'dummy' => '',
+        ));
+    }
+
+    /**
+     * Callback when the plugin is deactivated
+     */
+    public static function deactivation()
+    {
+        // delete options
+        delete_option('foo');
+    }
+
+    /**
+     * Initialize Yii
+     */
+    public static function yiiInit()
+    {
+        // only run if Yii was found
+        if (!defined('YII_EMBED_YII_VERSION') || !YII_EMBED_YII_VERSION)
+            return;
+
+        // setup aliases
+        Yii::setPathOfAlias('foo', FOO_PATH . 'app');
+        Yii::import('foo.components.*');
+        Yii::import('foo.models.*');
+        // setup controllers
+        foreach (glob(Yii::getPathOfAlias('foo.controllers') . '/*') as $controller) {
+            Yii::app()->controllerMap[lcfirst(str_replace('Controller.php', '', basename($controller)))] = strtr($controller, array(FOO_PATH . 'app' => 'foo', '.php' => '', '/' => '.', '\\' => '.'));
+        }
+        // custom routes
+        Yii::app()->urlManager->rules['bar/&lt;action:(\w+)&gt;'] = 'fooBar/&lt;action&gt;';
+        Yii::app()->urlManager->rules['bar'] = 'fooBar/index';
+        Yii::app()->urlManager->init();
+        // register scripts
+        self::registerScripts();
+    }
+
+    /**
+     * Registers the css and js scripts
+     * @return string
+     */
+    public static function registerScripts()
+    {
+        // only run if Yii was found
+        if (!defined('YII_EMBED_YII_VERSION') || !YII_EMBED_YII_VERSION)
+            return;
+        // register css/js files
+        if (!is_admin())
+            Yii::app()->clientScript->registerCssFile(self::assetsUrl() . '/css/foo_front.css');
+    }
+
+    /**
+     * Returns the assets url
+     * @return string
+     */
+    public static function assetsUrl()
+    {
+        static $assetsUrl;
+        if ($assetsUrl !== null)
+            return $assetsUrl;
+
+        // only run if Yii was found
+        if (!defined('YII_EMBED_YII_VERSION') || !YII_EMBED_YII_VERSION)
+            return $assetsUrl = false;
+
+        // publish the assets
+        return $assetsUrl = Yii::app()->assetManager->publish(Yii::getPathOfAlias('foo.assets'), true, -1, YII_DEBUG);
+    }
+
+}</pre>
+
+
+        <h4><code>wp-content/plugins/foo/includes/FooAdmin.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * FooAdmin is the static helper class for Foo Plugin administration functionality.
+ */
+class FooAdmin
+{
+
+    /**
+     * Initialize the Admin callbacks and messages.
+     */
+    public static function init()
+    {
+        // add action for notices
+        add_action('foo_admin_notice', 'FooAdmin::notice', 10, 2);
+
+        // check if yii-embed is installed
+        add_action('init', 'FooAdmin::yiiEmbedCheck');
+
+        // add admin menu pages
+        add_action('admin_menu', 'FooAdmin::menu');
+
+        // register settings page
+        require_once(FOO_PATH . 'includes/FooSettings.php');
+        new FooSettings();
+    }
+
+    /**
+     * Callback to and menus and pages.
+     */
+    public static function menu()
+    {
+        add_menu_page(__('Foo'), __('Foo'), 'administrator', 'foo_index', 'YiiEmbedAdmin::page');
+        if (isset($_GET['page']) && strpos($_GET['page'], 'foo_') === 0) {
+            add_submenu_page('foo_index', '', '', 'administrator', $_GET['page'], 'YiiEmbedAdmin::page');
+        }
+    }
+
+    /**
+     * Callback for foo_admin_notice.
+     *
+     * Example:
+     * do_action('foo_admin_notice', __('&lt;p&gt;Hello world!&lt;/p&gt;'));
+     * do_action('foo_admin_notice', __('&lt;p&gt;An error occurred.&lt;/p&gt;'), 'error');
+     *
+     * @param string $message HTML message to display on the admin page.
+     * @param string $class CSS class to wrap the message in, either "updated" or "error".
+     */
+    public static function notice($message, $class = 'updated')
+    {
+        add_action('admin_notices', create_function('', 'echo \'&lt;div class="' . addslashes($class) . '"&gt;' . str_replace("'", "\\'", $message) . '&lt;/div&gt;\';'));
+    }
+
+    /**
+     * Callback to see if yii-embed is installed.
+     */
+    public static function yiiEmbedCheck()
+    {
+        if (!defined('YII_EMBED_VERSION')) {
+            $message = strtr(__('&lt;p&gt;&lt;b&gt;Could not find Yii Embed plugin!&lt;/b&gt;&lt;br/&gt;Download it using the button below and move it into your &lt;b&gt;wp-content/plugins&lt;/b&gt; folder, then visit the &lt;a href=":plugins_href"&gt;&lt;strong&gt;Plugins&lt;/strong&gt;&lt;/a&gt; page to enable it:&lt;/p&gt;&lt;p&gt;:download&lt;/p&gt;'), array(
+                ':settings_href' =&gt; get_admin_url() . 'admin.php?page=yii_embed_settings',
+                ':download' =&gt; '&lt;a href="https://github.com/cornernote/yii-embed-wordpress/archive/master.zip" class="button-primary"&gt;' . __('Download Yii Embed') . '&lt;/a&gt;',
+            ));
+            do_action('foo_admin_notice', $message, 'error');
+        }
+    }
+
+}</pre>
+
+        <h4><code>wp-content/plugins/foo/includes/FooSettings.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * FooSettings manages the setup and callbacks for the administration options page.
+ */
+class FooSettings
+{
+
+    /**
+     * @var array values to be used in the fields callbacks.
+     */
+    private $options;
+
+    /**
+     * Add callbacks to add admin menu and setup options form.
+     */
+    public function __construct()
+    {
+        // add admin menu
+        add_action('admin_menu', array($this, 'admin_menu'));
+
+        // setup options form
+        add_action('admin_init', array($this, 'admin_init'));
+    }
+
+    /**
+     * Callback to add the admin menu page under "WPAdmin &gt; Settings".
+     */
+    public function admin_menu()
+    {
+        // add options page to the menu
+        add_options_page(__('Foo Settings'), __('Foo'), 'manage_options', 'foo_settings', array($this, 'options_page'));
+    }
+
+    /**
+     * Callback to register and add sections and settings
+     */
+    public function admin_init()
+    {
+        // register the setting and validation callback
+        register_setting('foo', 'foo', array($this, 'validate'));
+
+        // add the settings section
+        add_settings_section('foo', '', array($this, 'settings_section_foo'), 'foo_settings');
+
+        // add the dummy field
+        add_settings_field('foo_dummy', __('Dummy Setting'), array($this, 'settings_field_dummy'), 'foo_settings', 'foo');
+    }
+
+    /**
+     * Validate and sanitize each setting that is entered into the options page.
+     * @param array $input Contains all settings fields as array keys
+     * @return array
+     */
+    public function validate($input)
+    {
+        // validate dummy
+        if (!empty($input['dummy']))
+            $input['dummy'] = trim($input['dummy']);
+
+        // return sanitized input
+        return $input;
+    }
+
+    /**
+     * Callback to display the options page.
+     */
+    public function options_page()
+    {
+        // load the options
+        $this-&gt;options = get_option('foo');
+
+        // begin the options form
+        echo '&lt;div class="wrap"&gt;';
+        echo '&lt;h2&gt;' . __('Foo Settings') . '&lt;/h2&gt;';
+        echo '&lt;form method="post" action="options.php"&gt;';
+
+        // render settings fields
+        settings_fields('foo');
+        do_settings_sections('foo_settings');
+
+        // render submit button
+        submit_button(__('Save Changes'), 'primary', 'submit', false);
+
+        // end the options form
+        echo '&lt;/form&gt;';
+        echo '&lt;/div&gt;';
+    }
+
+    /**
+     * Callback to add the section settings
+     */
+    public static function settings_section_foo()
+    {
+        //echo __('Foo Settings:');
+    }
+
+    /**
+     * Callback to add the dummy setting field
+     */
+    public function settings_field_dummy()
+    {
+        echo strtr('&lt;input type="text" id="foo_dummy" name="foo[dummy]" class="regular-text" value=":value" /&gt;&lt;p class="description"&gt;:description&lt;/p&gt;', array(
+            ':value' =&gt; isset($this-&gt;options['dummy']) ? esc_attr($this-&gt;options['dummy']) : '',
+            ':description' =&gt; __('This is a placeholder setting, will be replaced when we have settings that need to be added.'),
+        ));
+    }
+
+}</pre>
+
+        <h4><code>wp-content/plugins/foo/app/assets/css/foo_front.php</code></h4>
+
+        <pre class="prettyprint linenums lang-css">/** Your front-end styles go here. */</pre>
+
+        <h4><code>wp-content/plugins/foo/app/components/FooController.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * FooController is the base controller for other controllers in the Foo plugin.
+ */
+class FooController extends YiiEmbedController
+{
+    /**
+     * Initialize the controller
+     */
+    public function init()
+    {
+        // set the view path
+        Yii::app()->viewPath = Yii::getPathOfAlias('foo.views');
+    }
+}</pre>
+
+
+        <h3 id="usage/examples">Examples</h3>
+
+        <p>...</p>
+
+        <h3 id="usage/gii">Gii Code Generator</h3>
+
+        <p>You can use Yii's awesome code generator from your WordPress site, just like you can in any other Yii app. Simply browse to your
+            <code>example.com/gii</code>.</p>
+
+        <p>You must set <code>WP_DEBUG</code> to <code>TRUE</code> in <code>wp-config.php</code>, once this is done you can use Gii without a password.</p>
+
+        <p>Some generators do not allow the selection of a path (for example CrudGenerator) so you will have to generate them into the <code>wp-content/plugins/yii-embed-wordpress/app</code> folder and then move them to your plugin app folder.</p>
+
+        <p>To tune the Gii configuration or security access edit <code>wp-content/yii-embed-wordpress/app/config/main.php</code>.</p>
+
+        <h4>ModelDoc Generator</h4>
+
+        <p>Use the ModelDoc Generator to replace the phpdoc blocks in your models.</p>
+
+        <h4>Other Generators</h4>
+
+        <p>All the default Gii Generators including Controller Generator, Crud Generator, Form Generator, Model Generator and Module Generator are also available.</p>
+
+    </div>
+</div>
+
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3>Support</h3>
+                <ul class="list-unstyled">
+                    <li>Does this site need improvement? Go ahead and
+                        <a href="https://github.com/cornernote/yii-embed-wordpress/edit/gh-pages/index.html">suggest a change</a>.
+                    </li>
+                    <li>Found a bug, or need help using this project? Check the
+                        <a href="https://github.com/cornernote/yii-embed-wordpress/issues">open issues</a> or
+                        <a href="https://github.com/cornernote/yii-embed-wordpress/issues/new">create an issue</a>.
+                    </li>
+                </ul>
+                <h4>License</h4>
+
+                <p>
+                    <a href="license.html" class="fancybox" data-fancybox-type="ajax">BSD-3-Clause</a>, Copyright &copy; 2013-2014
+                    <a href="mailto:info@mrphp.com.au">Mr PHP</a></p>
+            </div>
+            <div class="col-lg-4">
+                <h4>Yii Embed for WordPress</h4>
+                <ul class="list-unstyled">
+                    <li><a href="http://cornernote.github.io/yii-embed-wordpress">Documentation</a></li>
+                    <li><a href="https://github.com/cornernote/yii-embed-wordpress">GitHub Project</a></li>
+                    <li><a href="http://www.yiiframework.com/extension/yii-embed-wordpress">Yii Extension</a></li>
+                    <li>
+                        <a href="http://www.wordpress.com/index.php?route=extension/extension/info&extension_id=15059">WordPress Extension</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="project-icons" class="text-center">
+        <p>
+            <a href="http://mrphp.com.au"><img src="https://raw.github.com/cornernote/mrphp-assets/master/img/code-banner.png" alt="Mr PHP"></a>
+            <a href="https://www.ohloh.net/p/yii-embed-wordpress"><img src="https://www.ohloh.net/p/yii-embed-wordpress/widgets/project_thin_badge.gif" alt="Project Stats"></a>
+        </p>
+        <!--
+        <p>
+            <a href="https://packagist.org/packages/cornernote/yii-embed-wordpress"><img src="https://poser.pugx.org/cornernote/yii-embed-wordpress/v/stable.png" alt="Latest Stable Version"></a>
+            <a href="https://travis-ci.org/cornernote/yii-embed-wordpress"><img src="https://travis-ci.org/cornernote/yii-embed-wordpress.png?branch=master" alt="Build Status"></a>
+        </p>
+        -->
+    </div>
+</div>
+
+<!-- load js last -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-46879709-7', 'cornernote.github.io');
+    ga('send', 'pageview');
+</script>
+
+</body>
 </html>
