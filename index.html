@@ -333,7 +333,7 @@ class Foo
         }
 
         // setup custom routes
-        Yii::app()->urlManager->rules['bar/&lt;action:(\w+)&gt;'] = 'fooBar/&lt;action&gt;';
+        Yii::app()->urlManager->rules['bar/&lt;action:(\w+)&gt;*'] = 'fooBar/&lt;action&gt;';
         Yii::app()->urlManager->rules['bar'] = 'fooBar/index';
         Yii::app()->urlManager->init();
 
