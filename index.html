@@ -111,7 +111,7 @@
             <li>Comes with Yii Audit Module (improved error handling and auditing).</li>
             <li>Plugin will automatically download Yii framework for easier installation.</li>
             <li>Uses Yii pretty error message and stack dump</li>
-            <li>...</li>
+            <li>// TODO</li>
         </ul>
         <p>The following Yii components are pre-configured to work in your WordPress:</p>
         <ul>
@@ -147,7 +147,7 @@
 
         <h3 id="features/screenshots">Screenshots</h3>
 
-        <p>...</p>
+        <p>// TODO</p>
 
     </div>
 
@@ -199,7 +199,8 @@
 
         <h3 id="usage/plugin">Creating a Plugin</h3>
 
-        <p>In this example we will create a WordPress plugin called Foo.</p>
+        <p>In this example we will create a WordPress plugin called Foo.
+            It will contain a controller called BarController with very simple functionality.</p>
 
         <h4>Directory Structure</h4>
         <pre>wp-content/plugins/foo/              -- folder containing your plugin
@@ -211,14 +212,30 @@
     app/                             -- yii application
         assets/                      -- assets folder
             css/                     -- stylesheet files
+                foo_admin.css        -- front end stylesheet
+                foo_front.css        -- front end stylesheet
             img/                     -- image files
             js/                      -- javascript files
         components/                  -- application components (auto loaded)
             FooController.php        -- base controller
         controllers/                 -- controller classes
+            FooBarController.php     -- example controller
         models/                      -- model classes
+            FooBar.php               -- example model
         views/                       -- view files
+            fooBar/                  -- view files for FooBarController
+                admin.php            -- admin page
+                front.php            -- front page
 </pre>
+
+        <h4>Database Schema</h4>
+
+        <pre class="prettyprint linenums lang-sql">CREATE TABLE `wp_foo_bar` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `description` text NOT NULL,
+    PRIMARY KEY (`id`)
+);</pre>
 
         <h4><code>wp-content/plugins/foo/foo.php</code></h4>
 
@@ -304,14 +321,17 @@ class Foo
         Yii::setPathOfAlias('foo', FOO_PATH . 'app');
         Yii::import('foo.components.*');
         Yii::import('foo.models.*');
-        // setup controllers
+
+        // setup controller map
         foreach (glob(Yii::getPathOfAlias('foo.controllers') . '/*') as $controller) {
             Yii::app()->controllerMap[lcfirst(str_replace('Controller.php', '', basename($controller)))] = strtr($controller, array(FOO_PATH . 'app' => 'foo', '.php' => '', '/' => '.', '\\' => '.'));
         }
-        // custom routes
+
+        // setup custom routes
         Yii::app()->urlManager->rules['bar/&lt;action:(\w+)&gt;'] = 'fooBar/&lt;action&gt;';
         Yii::app()->urlManager->rules['bar'] = 'fooBar/index';
         Yii::app()->urlManager->init();
+
         // register scripts
         self::registerScripts();
     }
@@ -326,8 +346,12 @@ class Foo
         if (!defined('YII_EMBED_YII_VERSION') || !YII_EMBED_YII_VERSION)
             return;
         // register css/js files
-        if (!is_admin())
+        if (is_admin()) {
+            Yii::app()->clientScript->registerCssFile(self::assetsUrl() . '/css/foo_admin.css');
+        }
+        else {
             Yii::app()->clientScript->registerCssFile(self::assetsUrl() . '/css/foo_front.css');
+        }
     }
 
     /**
@@ -381,12 +405,14 @@ class FooAdmin
 
     /**
      * Callback to and menus and pages.
+     * Admin page format is: yii_embed_[controller]_[action]
      */
     public static function menu()
     {
-        add_menu_page(__('Foo'), __('Foo'), 'administrator', 'foo_index', 'YiiEmbedAdmin::page');
-        if (isset($_GET['page']) && strpos($_GET['page'], 'foo_') === 0) {
-            add_submenu_page('foo_index', '', '', 'administrator', $_GET['page'], 'YiiEmbedAdmin::page');
+        // add page for FooBarController::actionAdmin()
+        add_menu_page(__('Foo'), __('Foo'), 'administrator', 'yii_embed_fooBar_admin', 'YiiEmbedAdmin::page');
+        if (isset($_GET['page']) && strpos($_GET['page'], 'yii_embed_fooBar_') === 0) {
+            add_submenu_page('yii_embed_fooBar_admin', '', '', 'administrator', $_GET['page'], 'YiiEmbedAdmin::page');
         }
     }
 
@@ -532,9 +558,13 @@ class FooSettings
 
 }</pre>
 
-        <h4><code>wp-content/plugins/foo/app/assets/css/foo_front.php</code></h4>
+        <h4><code>wp-content/plugins/foo/app/assets/css/foo_admin.css</code></h4>
 
-        <pre class="prettyprint linenums lang-css">/** Your front-end styles go here. */</pre>
+        <pre class="prettyprint linenums lang-css">/** Your admin styles go here. */</pre>
+
+        <h4><code>wp-content/plugins/foo/app/assets/css/foo_front.css</code></h4>
+
+        <pre class="prettyprint linenums lang-css">/** Your front styles go here. */</pre>
 
         <h4><code>wp-content/plugins/foo/app/components/FooController.php</code></h4>
 
@@ -549,15 +579,99 @@ class FooController extends YiiEmbedController
      */
     public function init()
     {
+        // parent init
+        parent::init();
         // set the view path
         Yii::app()->viewPath = Yii::getPathOfAlias('foo.views');
     }
 }</pre>
 
+        <h4><code>wp-content/plugins/foo/app/controllers/FooBarController.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * FooBarController is an example controller.
+ */
+class FooBarController extends FooController
+{
+    /**
+     * @param CAction $action
+     * @return bool
+     */
+    public function beforeAction($action)
+    {
+        if (is_admin()) {
+            if (in_array($action->id, array('admin')))
+                return true;
+        }
+        else {
+            if (in_array($action->id, array('front')))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Admin Page
+     */
+    public function actionAdmin()
+    {
+        $this->render('admin');
+    }
+
+    /**
+     * Front Page
+     */
+    public function actionFront()
+    {
+        $this->render('front');
+    }
+}</pre>
+
+
+        <h4><code>wp-content/plugins/foo/app/models/FooBar.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+/**
+ * FooBar is an example model.
+ */
+class FooBar extends YiiEmbedActiveRecord
+{
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return FooBar the static model class
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return '{{foo_bar}}';
+    }
+}</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/admin.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+$this->pageTitle = Yii::t('foo', 'FooBar Admin');
+echo CHtml::link(Yii::t('foo', 'Admin'), array('fooBar/admin'));</pre>
+
+        <h4><code>wp-content/plugins/foo/app/views/fooBar/front.php</code></h4>
+
+        <pre class="prettyprint linenums lang-php">&lt;?php
+$this->pageTitle = Yii::t('foo', 'FooBar Front');
+echo CHtml::link(Yii::t('foo', 'Front'), array('fooBar/front'));</pre>
+
 
         <h3 id="usage/examples">Examples</h3>
 
-        <p>...</p>
+        <p>// TODO</p>
 
         <h3 id="usage/gii">Gii Code Generator</h3>
 
