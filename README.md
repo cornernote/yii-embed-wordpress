@@ -7,7 +7,8 @@ A lightweight [Yii](http://www.yiiframework.com/) application embedded into [Wor
 
 ## Features
 
-...
+- Handles the download of Yii framework
+- ...
 
 
 ## Resources
@@ -15,7 +16,7 @@ A lightweight [Yii](http://www.yiiframework.com/) application embedded into [Wor
 - **[Documentation](http://cornernote.github.io/yii-embed-wordpress)**
 - **[GitHub Project](https://github.com/cornernote/yii-embed-wordpress)**
 - **[Yii Extension](http://www.yiiframework.com/extension/yii-embed-wordpress)**
-- **WordPress Plugin (rejected because wordpress considered it not useful on its own)**
+- **WordPress Plugin** (rejected because wordpress considered it not useful on its own)
 
 [![Mr PHP](https://raw.github.com/cornernote/mrphp-assets/master/img/code-banner.png)](http://mrphp.com.au) [![Project Stats](https://www.ohloh.net/p/yii-embed-wordpress/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/yii-embed-wordpress)
 
