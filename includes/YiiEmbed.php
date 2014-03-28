@@ -50,11 +50,11 @@ class YiiEmbed
     public static function init()
     {
         // load language
-        load_plugin_textdomain('yii-embed', false, basename(YII_EMBED_PATH) . '/languages');
+        load_plugin_textdomain('yii_embed', false, basename(YII_EMBED_PATH) . '/languages');
         // runs when plugin is activated
-        register_activation_hook(YII_EMBED_PATH . 'yii-embed.php', 'YiiEmbed::activation');
+        register_activation_hook(YII_EMBED_PATH . 'yii_embed.php', 'YiiEmbed::activation');
         // runs on plugin deactivation
-        register_deactivation_hook(YII_EMBED_PATH . 'yii-embed.php', 'YiiEmbed::deactivation');
+        register_deactivation_hook(YII_EMBED_PATH . 'yii_embed.php', 'YiiEmbed::deactivation');
         // setup admin pages
         if (is_admin()) {
             require_once(YII_EMBED_PATH . 'includes/YiiEmbedAdmin.php');
@@ -134,8 +134,9 @@ class YiiEmbed
             return $yiiVersion = false;
 
         require_once($yii_file);
-        YiiBase::setPathOfAlias('yii-embed', YII_EMBED_PATH . 'app');
-        YiiBase::import('yii-embed.components.*');
+        YiiBase::setPathOfAlias('yii_embed', YII_EMBED_PATH . 'app');
+        YiiBase::import('yii_embed.components.*');
+        YiiBase::import('yii_embed.models.*');
         YiiBase::$enableIncludePath = false;
         return $yiiVersion = YiiBase::getVersion();
     }
@@ -224,7 +225,7 @@ class YiiEmbed
         if (!YII_EMBED_YII_VERSION)
             return $assetsUrl = false;
         // publish the assets
-        return $assetsUrl = Yii::app()->assetManager->publish(Yii::getPathOfAlias('yii-embed.assets'), true, -1, YII_DEBUG);
+        return $assetsUrl = Yii::app()->assetManager->publish(Yii::getPathOfAlias('yii_embed.assets'), true, -1, YII_DEBUG);
     }
 
     /**

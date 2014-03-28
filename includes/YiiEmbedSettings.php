@@ -67,7 +67,7 @@ class YiiEmbedSettings
     public function admin_menu()
     {
         // add options page to the menu
-        add_options_page('Yii Embed Settings', 'Yii Embed', 'manage_options', 'yii-embed-settings', array($this, 'options_page'));
+        add_options_page('Yii Embed Settings', 'Yii Embed', 'manage_options', 'yii_embed_settings', array($this, 'options_page'));
     }
 
     /**
@@ -76,7 +76,7 @@ class YiiEmbedSettings
     public function admin_init()
     {
         // show version if yii was loaded
-        if (!empty($_GET['page']) && $_GET['page'] == 'yii-embed-settings' && YiiEmbed::yiiVersion()) {
+        if (!empty($_GET['page']) && $_GET['page'] == 'yii_embed_settings' && YiiEmbed::yiiVersion()) {
             do_action('yii_embed_admin_notice', strtr(__('<p>Detected Yii Framework :version, Yii-Haw!</p>'), array(':version' => YiiEmbed::yiiVersion())));
         }
 
@@ -84,24 +84,24 @@ class YiiEmbedSettings
         register_setting('yii_embed', 'yii_embed', array($this, 'validate'));
 
         // yii settings
-        add_settings_section('yii', '', array($this, 'settings_section_yii'), 'yii-embed-settings');
-        add_settings_field('yii_embed_yii_path', __('Yii Path'), array($this, 'settings_field_yii_path'), 'yii-embed-settings', 'yii');
+        add_settings_section('yii', '', array($this, 'settings_section_yii'), 'yii_embed_settings');
+        add_settings_field('yii_embed_yii_path', __('Yii Path'), array($this, 'settings_field_yii_path'), 'yii_embed_settings', 'yii');
 
         // admin bootstrap settings
-        add_settings_section('admin_bootstrap', '', array($this, 'settings_section_admin_bootstrap'), 'yii-embed-settings');
-        add_settings_field('yii_embed_admin_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_admin_bootstrap_css'), 'yii-embed-settings', 'admin_bootstrap');
-        add_settings_field('yii_embed_admin_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_admin_bootstrap_css_responsive'), 'yii-embed-settings', 'admin_bootstrap');
-        add_settings_field('yii_embed_admin_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_admin_bootstrap_js'), 'yii-embed-settings', 'admin_bootstrap');
-        add_settings_field('yii_embed_admin_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_admin_bootstrap_js_popover'), 'yii-embed-settings', 'admin_bootstrap');
-        add_settings_field('yii_embed_admin_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_admin_bootstrap_js_tooltip'), 'yii-embed-settings', 'admin_bootstrap');
+        add_settings_section('admin_bootstrap', '', array($this, 'settings_section_admin_bootstrap'), 'yii_embed_settings');
+        add_settings_field('yii_embed_admin_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_admin_bootstrap_css'), 'yii_embed_settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_admin_bootstrap_css_responsive'), 'yii_embed_settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_admin_bootstrap_js'), 'yii_embed_settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_admin_bootstrap_js_popover'), 'yii_embed_settings', 'admin_bootstrap');
+        add_settings_field('yii_embed_admin_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_admin_bootstrap_js_tooltip'), 'yii_embed_settings', 'admin_bootstrap');
 
         // front bootstrap settings
-        add_settings_section('front_bootstrap', '', array($this, 'settings_section_front_bootstrap'), 'yii-embed-settings');
-        add_settings_field('yii_embed_front_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_front_bootstrap_css'), 'yii-embed-settings', 'front_bootstrap');
-        add_settings_field('yii_embed_front_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_front_bootstrap_css_responsive'), 'yii-embed-settings', 'front_bootstrap');
-        add_settings_field('yii_embed_front_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_front_bootstrap_js'), 'yii-embed-settings', 'front_bootstrap');
-        add_settings_field('yii_embed_front_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_front_bootstrap_js_popover'), 'yii-embed-settings', 'front_bootstrap');
-        add_settings_field('yii_embed_front_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_front_bootstrap_js_tooltip'), 'yii-embed-settings', 'front_bootstrap');
+        add_settings_section('front_bootstrap', '', array($this, 'settings_section_front_bootstrap'), 'yii_embed_settings');
+        add_settings_field('yii_embed_front_bootstrap_css', __('Bootstrap CSS'), array($this, 'settings_field_front_bootstrap_css'), 'yii_embed_settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_css_responsive', __('Bootstrap Responsive CSS'), array($this, 'settings_field_front_bootstrap_css_responsive'), 'yii_embed_settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js', __('Bootstrap JS'), array($this, 'settings_field_front_bootstrap_js'), 'yii_embed_settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js_popover', __('Bootstrap Popover JS'), array($this, 'settings_field_front_bootstrap_js_popover'), 'yii_embed_settings', 'front_bootstrap');
+        add_settings_field('yii_embed_front_bootstrap_js_tooltip', __('Bootstrap Tooltip JS'), array($this, 'settings_field_front_bootstrap_js_tooltip'), 'yii_embed_settings', 'front_bootstrap');
     }
 
     /**
@@ -173,7 +173,7 @@ class YiiEmbedSettings
 
         // render settings fields
         settings_fields('yii_embed');
-        do_settings_sections('yii-embed-settings');
+        do_settings_sections('yii_embed_settings');
 
         // render submit button
         submit_button(__('Save Changes'), 'primary', 'submit', false);

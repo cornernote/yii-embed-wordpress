@@ -110,7 +110,7 @@ class YiiEmbedDownload
             $this->output('<a href="download.php?force=true">' . __('Force Download') . '</a> | ');
         }
         // link back to admin
-        $this->output('<a href="' . get_admin_url() . 'options-general.php?page=yii-embed-settings">' . __('Return to WordPress') . '</a>');
+        $this->output('<a href="' . get_admin_url() . 'options-general.php?page=yii_embed_settings">' . __('Return to WordPress') . '</a>');
     }
 
     /**

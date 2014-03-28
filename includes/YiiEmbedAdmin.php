@@ -55,7 +55,7 @@ class YiiEmbedAdmin
         // message if yii is not found
         if (!YII_EMBED_YII_VERSION) {
             $message = strtr(__('<p><b>Could not find Yii Framework.</b><br/>Visit <a href=":settings_href"><strong>Settings &gt; Yii Embed</strong></a> to configure the path or download the framework using one of the following methods:</p><p class="submit">:automatic_download :manual_download</p>'), array(
-                ':settings_href' => get_admin_url() . 'admin.php?page=yii-embed-settings',
+                ':settings_href' => get_admin_url() . 'admin.php?page=yii_embed_settings',
                 ':automatic_download' => '<a href="' . YII_EMBED_URL . '/yii/download.php" class="button-primary" onclick="return confirm(\'Do you want to download and install Yii Framework to:\n' . YiiEmbed::yiiPath() . '\')">' . __('Automatic Download') . '</a>',
                 ':manual_download' => '<a href="' . YiiEmbed::yiiDownloadUrl() . '" onclick="return confirm(\'After downloading, please unzip the Yii &quot;framework/&quot; folder into:\n' . YiiEmbed::yiiPath() . '\');" class="button">' . __('Manual Download') . '</a>',
             ));
@@ -76,7 +76,7 @@ class YiiEmbedAdmin
         Yii::app()->clientScript->registerCss('hide-submenu', '.wp-has-current-submenu .wp-submenu{ display:none; }');
         // get the route
         $page = isset($_GET['page']) ? $_GET['page'] : null;
-        $route = str_replace('-', '/', str_replace('yii-embed-', '', $page));
+        $route = str_replace('_', '/', str_replace('yii_embed_', '', $page));
         // try run controller
         try {
             ob_start();
