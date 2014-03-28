@@ -242,10 +242,13 @@ class YiiEmbed
             ob_start();
             Yii::app()->processRequest();
             $content = ob_get_clean();
+            // return to wordpress if content is empty
+            if (!$content) return;
         } catch (CHttpException $e) {
             // got an exception, let wordpress handle the page
             return;
         }
+
         // load the page
         $posts = $wp_query->query(array('pagename' => 'yii'));
         $post = $posts[0];
@@ -253,6 +256,8 @@ class YiiEmbed
         $post->post_title = Yii::app()->controller->pageTitle;
         // callback to set the title
         add_filter('wp_title', 'YiiEmbed::pageTitle');
+        // remove the edit post link
+        add_filter('edit_post_link', '__return_false');
         // controller ran, not a 404
         status_header(200);
         $wp_query->is_404 = false;
