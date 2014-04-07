@@ -1,6 +1,6 @@
 # Yii Embed for WordPress
 
-A lightweight [Yii](http://www.yiiframework.com/) application embedded into [WordPress](http://www.wordpress.org/)
+Simple integration of [Yii](http://www.yiiframework.com/) directly into [WordPress](http://www.wordpress.org/).
 
 ![Yii Framework](https://raw.github.com/cornernote/yii-embed-wordpress/master/image/yii.png) & ![WordPress](https://raw.github.com/cornernote/yii-embed-wordpress/master/image/wordpress.png)
 
